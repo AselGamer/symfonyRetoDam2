@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="login-form bg-light mt-4 p-4">
+            <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
+            <form action="{{ path('app_empleado_register') }}" method="POST"> <!-- Replace 'your_php_script.php' with the actual processing script -->
+                <div class="col-12">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" name="email" id="inputEmail" class="form-control" required autofocus>
+                </div>
+                <div class="col-12">
+                    <label for="inputName">Nombre</label>
+                    <input type="text" name="nombre" id="inputName" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <label for="inputLastName1">Apellido 1</label>
+                    <input type="text" name="apellido1" id="inputLastName1" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <label for="inputLastName2">Apellido 2</label>
+                    <input type="text" name="apellido2" id="inputLastName2" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <label for="inputGerente">Gerente</label>
+                    <select name="gerente" id="inputGerente" class="form-control">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-lg btn-primary float-end" type="submit">
+                        Sign up
+                    </button>
+                </div>
+            </form>
+            <p class="error">{{ error }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,14 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * Usuario
- * @ORM\Entity
+ *
  * @ORM\Table(name="Usuario")
- * 
+ * @ORM\Entity
  */
-class Usuario
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -112,5 +114,49 @@ class Usuario
      */
     private $pais;
 
+    /*
+    * @ORM\Column(type= "json")
+    */
+    private array $roles = [];
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+
+    }
+
+    /**
+     * Returns the identifier for this user (e.g. username or email address).
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
 }

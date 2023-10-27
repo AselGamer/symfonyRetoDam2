@@ -1,3 +1,66 @@
+@import '~bootstrap';
+
 body {
     background-color: lightgray;
 }
+
+
+.error
+{
+    color: red;
+    font-size: 36px;
+}
+
+/* Style the form container */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the form header */
+.form-header {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style form labels */
+label {
+    font-weight: bold;
+}
+
+/* Style input fields */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style the "Sign up" button */
+.btn-primary {
+    background-color: black;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Style the button on hover */
+.btn-primary:hover {
+    background-color: black;
+}
+
+/* Style the select dropdown */
+select.form-control {
+    appearance: none;
+    padding: 10px;
+}
+
