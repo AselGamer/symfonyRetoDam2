@@ -1,8 +1,7 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        App\Entity\Empleado: 'plaintext'
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'plaintext'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
@@ -12,13 +11,19 @@ security:
                 class: App\Entity\Usuario
                 # the property to query by - e.g. email, username, etc
                 property: email
+        empleados:
+            entity:
+                # the class of the entity that represents users
+                class: App\Entity\Empleado
+                # the property to query by - e.g. email, username, etc
+                property: email
     firewalls:
         login:
-            pattern: ^/login
-            stateless: true
+            pattern: ^/api
+            stateless: false
             provider: usuarios
             json_login:
-                check_path: /login_check # or api_login_check as defined in config/routes.yaml
+                check_path: /api/login # or api_login_check as defined in config/routes.yaml
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
@@ -31,7 +36,10 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: empleados
+            form_login:
+                login_path: app_empleado_login
+                check_path: app_empleado_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -43,6 +51,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/register,       roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
@@ -50,7 +59,6 @@ security:
 when@test:
     security:
         password_hashers:
-            App\Entity\Empleado: 'auto'
             # By default, password hashers are resource intensive and take time. This is
             # important to generate secure password hashes. In tests however, secure hashes
             # are not important, waste resources and increase test times. The following

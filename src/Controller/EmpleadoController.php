@@ -5,58 +5,59 @@ namespace App\Controller;
 
 use App\Entity\Empleado;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class EmpleadoController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+    private Security $security;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     #[Route('/empleado', name: 'app_empleado')]
     public function index(): Response
     {
-        session_start();
-
-        if (!isset($_SESSION['id_empleado'])) {
+        if (is_null($this->security->getUser())) {
             return $this->redirect('login');
         }
-        
+
+        /** @var Empleado $empleado */
+        $empleado = $this->security->getUser();
+
         return $this->render('usuario/index.html.twig', [
             'controller_name' => 'EmpleadoController',
         ]);
     }
 
 
-    #[Route('/login', name: 'app_empleado_login', methods:['GET','POST'])]
-    public function login(Request $request): Response
+    #[Route('/login', name: 'app_empleado_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        
-        if ($_SERVER['REQUEST_METHOD']=='POST'){
-            $empleado = $this->entityManager->getRepository(Empleado::class)->findOneBy(['email' => $_POST['username'], 'password' => $_POST['password']]);
-            if ($empleado != null) {
-                session_start();
-                $_SESSION['username'] = $empleado->getEmail();
-                $_SESSION['id_empleado'] = $empleado->getIdempleado();
-                return $this->redirect('empleado');
-            }
-            
-        }
+        //var_dump($authenticationUtils->getLastAuthenticationError());
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('auth/login.html.twig', [
-            'controller_name' => 'UsuarioController',
+            'last_username' => $lastUsername,
+            'error' => $error,
         ]);
     }
 
 
     #[Route('/register', name: 'app_empleado_register', methods:['GET','POST'])]
-    public function register(Request $request): Response
+    public function register(UserPasswordHasherInterface $passwordHasher): Response
     {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -74,7 +75,6 @@ class EmpleadoController extends AbstractController
                 empty($_POST['password']) ? $error = true : $password = $_POST['password'];
                 $gerente = filter_var($_POST['gerente'], FILTER_VALIDATE_BOOLEAN);
 
-                var_dump($_POST['gerente']);
 
                 if ($error) {
                     return $this->render('auth/register.html.twig', [
@@ -86,7 +86,8 @@ class EmpleadoController extends AbstractController
                     $empleado->setApellido1($apellido);
                     $empleado->setApellido2($apellido2);
                     $empleado->setEmail($email);
-                    $empleado->setPassword($password);
+                    $hashedPassword = $passwordHasher->hashPassword($empleado, $password);
+                    $empleado->setPassword($hashedPassword);
                     $empleado->setGerente($gerente);
                     $this->entityManager->persist($empleado);
                     $this->entityManager->flush();
