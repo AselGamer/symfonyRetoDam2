@@ -8,6 +8,7 @@ use App\Entity\Articulo;
 use App\Entity\Dispositivomovil;
 use App\Entity\Plataforma;
 use App\Entity\Videojuego;
+use App\Entity\VistaEntity;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -142,15 +143,105 @@ class ArticulosController extends AbstractController
         return $this->render('articulos/add.html.twig', $parametros);
     }
 
-    #[Route('/articulos/delete/{id}', name: 'app_articulos_delete')]
-    public function delete(Int $id): Response
+    #[Route('/articulos/delete/{id}', name: 'app_articulos_delete', methods:['POST'])]
+    public function delete(int $id): Response
     {
-        return $this->render('articulos/index.html.twig');
+
+        $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
+
+        $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
+
+        switch ($vistaTipo->getTipoarticulo()) {
+            case 'Consola':
+                $this->entityManager->remove($this->entityManager->getRepository(Consola::class)->findOneBy(array('idarticulo' => $id)));
+                $this->entityManager->flush();
+                break;
+            case 'DispositivoMovil':
+                $this->entityManager->remove($this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('idarticulo' => $id)));
+                $this->entityManager->flush();
+                break;
+            case 'Videojuego':
+                $this->entityManager->remove($this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idarticulo' => $id)));
+                $this->entityManager->flush();
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        $this->entityManager->remove($articulo);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_articulos');
     }
 
-    #[Route('/articulos/edit/{id}', name: 'app_articulos_edit')]
-    public function edit(Int $id): Response
+    #[Route('/articulos/edit/{id}', name: 'app_articulos_edit', methods:['GET', 'POST'])]
+    public function edit(int $id): Response
     {
-        return $this->render('articulos/index.html.twig');
+
+        $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
+
+        $parametros['articulo'] = $articulo;
+    
+        $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
+    
+        $parametros['tipo'] = $vistaTipo->getTipoarticulo();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            empty($_POST['nombre']) ? : $articulo->setNombre($_POST['nombre']);
+            empty($_POST['precio']) ? : $articulo->setPrecio($_POST['precio']);
+            empty($_POST['stock']) ? : $articulo->setStock($_POST['stock']);
+            //Implementar codigo de subida de fotos
+            empty($_FILES['foto']['name']) ? : $articulo->setFoto($_FILES['foto']['name']);
+            empty($_POST['idMarca']) ? : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
+            $this->entityManager->persist($articulo);
+            $this->entityManager->flush();
+            switch ($vistaTipo->getTipoarticulo()) {
+                case 'Consola':
+                    $articuloTipo = $this->entityManager->getRepository(Consola::class)->findOneBy(array('idarticulo' => $id));
+                    empty($_POST['modelo']) ? : $articuloTipo->setModelo($_POST['modelo']);
+                    empty($_POST['cant_mandos']) ? : $articuloTipo->setCantmandos($_POST['cant_mandos']);
+                    empty($_POST['almacenamientoConsola']) ? : $articuloTipo->setAlmacenamiento($_POST['almacenamientoConsola']);
+                    break;
+                case 'DispositivoMovil':
+                    $articuloTipo = $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('idarticulo' => $id));
+                    empty($_POST['almacenamiento']) ? : $articuloTipo->setAlmacenamiento($_POST['almacenamiento']);
+                    empty($_POST['ram']) ? : $articuloTipo->setRam($_POST['ram']);
+                    empty($_POST['pantalla']) ? : $articuloTipo->setTamanoPantalla($_POST['pantalla']);
+                    break;
+                case 'Videojuego':
+                    $articuloTipo = $this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idarticulo' => $id));
+                    empty($_POST['plataforma']) ? : $articuloTipo->setIdplataforma($this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataforma'])));
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+            $this->entityManager->persist($articuloTipo);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('app_articulos');
+        } else {    
+            switch ($vistaTipo->getTipoarticulo()) {
+                case 'Consola':
+                    $datosExtra = $this->entityManager->getRepository(Consola::class)->findOneBy(array('idconsola' => $vistaTipo->getIdtipoClase()));
+                    break;
+                case 'DispositivoMovil':
+                    $datosExtra = $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('iddispositivomovil' => $vistaTipo->getIdtipoClase()));
+                    break;
+                case 'Videojuego':
+                    $datosExtra = $this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idvideojuego' => $vistaTipo->getIdtipoClase()));
+                    break;
+                default:
+                    $datosExtra = null;
+                    break;
+            }
+            $parametros['datosExtra'] = $datosExtra;
+            $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
+            $parametros['marcas'] = $marcas;
+            $plataformas = $this->entityManager->getRepository(Plataforma::class)->findAll();
+            $parametros['plataformas'] = $plataformas;
+
+            return $this->render('articulos/edit.html.twig', $parametros);
+        }
     }
 }
