@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}{{ titulo }}{% endblock %}
+
+
+
+{% block body %}
+    <h1>{{ titulo }}</h1>
+    <table class = "text-center table table-bordered">
+       <thead>
+           <tr>
+               <th>
+                   ID
+               </th>
+               <th>
+                   MARCA
+               </th>
+               <th>
+                   NOMBRE
+               </th>
+               <th>
+                   PRECIO
+               </th>
+               <th>
+                   STOCK
+               </th>
+               <th>
+                   FOTO
+               </th>
+               <th>
+                   BORRAR
+               </th>
+               <th>
+                   EDITAR
+               </th>
+           </tr>
+       </thead>
+        <tbody>
+        {% for articulos in articulos %}
+        <tr>
+            <td>{{ articulos.idArticulo }}</td>
+            <td>{{ articulos.idmarca }}</td>
+            <td>{{ articulos.nombre }}</td>
+            <td>{{ articulos.precio }}</td>
+            <td>{{ articulos.stock }}</td>
+            <td>{{ articulos.foto }}</td>
+            <td><a href="{{ path('app_articulos_delete', {'id': articulos.idArticulo}) }}">Borrar</a></td>
+            <td><a href="{{ path('app_articulos_edit', {'id': articulos.idArticulo}) }}">Editar</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="botones">
+        <a href="{{ path('app_articulos_add') }}" >
+        <button class="btn btn-lg btn-primary float-start">Añadir Consola</button>
+        </a>
+
+        <a href="{{ path('app_articulos_add') }}" >
+        <button class="btn btn-lg btn-primary float-start">Añadir VideoJuego</button>
+        </a>
+
+        <a href="{{ path('app_articulos_add') }}" >
+        <button class="btn btn-lg btn-primary float-start">Añadir Dispositivo Movil</button>
+        </a>
+    </div>
+
+{% endblock %}

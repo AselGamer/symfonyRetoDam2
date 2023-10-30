@@ -28,5 +28,32 @@ class Marca
      */
     private $nombre;
 
+    public function __toString()
+    {
+        return $this->nombre;
+    }
 
+    public function getIdmarca(): ?int
+    {
+        return $this->idmarca;
+    }
+
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    public function setIdmarca(int $idmarca): self
+    {
+        $this->idmarca = $idmarca;
+
+        return $this;
+    }
+
+    public function setNombre(string $nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
 }

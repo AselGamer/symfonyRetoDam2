@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Marca;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -60,4 +61,114 @@ class Articulo
     private $idmarca;
 
 
+    
+
+
+    /**
+     * Get the value of idarticulo
+     */
+    public function getIdarticulo(): int
+    {
+        return $this->idarticulo;
+    }
+
+    /**
+     * Set the value of idarticulo
+     */
+    public function setIdarticulo(int $idarticulo): self
+    {
+        $this->idarticulo = $idarticulo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nombre
+     */
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set the value of nombre
+     */
+    public function setNombre(?string $nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of precio
+     */
+    public function getPrecio(): ?float
+    {
+        return $this->precio;
+    }
+
+    /**
+     * Set the value of precio
+     */
+    public function setPrecio(?float $precio): self
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of stock
+     */
+    public function getStock(): int
+    {
+        return $this->stock;
+    }
+
+    /**
+     * Set the value of stock
+     */
+    public function setStock(int $stock): self
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of foto
+     */
+    public function getFoto(): ?string
+    {
+        return $this->foto;
+    }
+
+    /**
+     * Set the value of foto
+     */
+    public function setFoto(?string $foto): self
+    {
+        $this->foto = $foto;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idmarca
+     */
+    public function getIdmarca(): ?Marca
+    {
+        return $this->idmarca;
+    }
+
+    /**
+     * Set the value of idmarca
+     */
+    public function setIdmarca(\Marca $idmarca): self
+    {
+        $this->idmarca = $idmarca;
+
+        return $this;
+    }
 }

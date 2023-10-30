@@ -6,7 +6,6 @@ namespace App\Controller;
 use App\Entity\Empleado;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +33,9 @@ class EmpleadoController extends AbstractController
         /** @var Empleado $empleado */
         $empleado = $this->security->getUser();
 
-        return $this->render('usuario/index.html.twig', [
+
+
+        return $this->render('empleado/index.html.twig', [
             'controller_name' => 'EmpleadoController',
         ]);
     }
@@ -61,6 +62,15 @@ class EmpleadoController extends AbstractController
     {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (is_null($this->security->getUser())) {
+                return $this->redirect('login');
+            } else {
+                /** @var Empleado $empleado */
+                $empleado = $this->security->getUser();
+                if ($empleado->isGerente() == false) {
+                    return $this->redirect('login');
+                }
+            }
             $existingEmpleado = $this->entityManager->getRepository(Empleado::class)->findOneBy(['email' => $_POST['email']]);
             if ($existingEmpleado !== null) {
                 return $this->render('auth/register.html.twig', [

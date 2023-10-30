@@ -7,5 +7,12 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
-import 'jquery';
+import jQuery, { map } from 'jquery';
 import 'bootstrap';
+
+jQuery(window).on('load', function() {
+
+    jQuery('#tipo').on('change', function() {
+        console.log(jQuery(this).val());
+    });
+});

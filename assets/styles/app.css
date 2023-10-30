@@ -64,3 +64,18 @@ select.form-control {
     padding: 10px;
 }
 
+#botones
+{
+    display: flex;
+    flex-direction: column;
+}
+
+#botones button
+{
+    margin: 10px;
+}
+
+.hidden
+{
+    display: none;
+}
