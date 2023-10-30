@@ -7,6 +7,13 @@
 
 {% block body %}
     <h1>{{ titulo }}</h1>
+
+    {% if error %}
+        <div>
+            <h2>{{ error }}</h2>
+        </div>
+    {% endif %}
+
     <table class = "text-center table table-bordered">
        <thead>
            <tr>
@@ -52,18 +59,8 @@
         </tbody>
     </table>
 
-    <div id="botones">
         <a href="{{ path('app_articulos_add') }}" >
-        <button class="btn btn-lg btn-primary float-start">Añadir Consola</button>
+            <button class="btn btn-lg btn-primary float-start">Añadir Producto</button>
         </a>
-
-        <a href="{{ path('app_articulos_add') }}" >
-        <button class="btn btn-lg btn-primary float-start">Añadir VideoJuego</button>
-        </a>
-
-        <a href="{{ path('app_articulos_add') }}" >
-        <button class="btn btn-lg btn-primary float-start">Añadir Dispositivo Movil</button>
-        </a>
-    </div>
 
 {% endblock %}

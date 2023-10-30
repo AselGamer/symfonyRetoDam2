@@ -28,5 +28,44 @@ class Plataforma
      */
     private $nombre;
 
+    public function __toString()
+    {
+        return $this->nombre;
+    }
+    
+    /**
+     * Get the value of idplataforma
+     */
+    public function getIdplataforma(): int
+    {
+        return $this->idplataforma;
+    }
 
+    /**
+     * Set the value of idplataforma
+     */
+    public function setIdplataforma(int $idplataforma): self
+    {
+        $this->idplataforma = $idplataforma;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nombre
+     */
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set the value of nombre
+     */
+    public function setNombre(string $nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
 }

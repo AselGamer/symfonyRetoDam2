@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
-use App\Entity\Marca;
+use App\Entity\Marca as Marca;
+use App\Repository\ArticuloRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Articulo
  *
  * @ORM\Table(name="Articulo", indexes={@ORM\Index(name="MarcaArticulo", columns={"idMarca"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=ArticuloRepository::class)
  */
 class Articulo
 {
@@ -51,7 +52,7 @@ class Articulo
     private $foto;
 
     /**
-     * @var \Marca
+     * @var Marca
      *
      * @ORM\ManyToOne(targetEntity="Marca")
      * @ORM\JoinColumns({
@@ -165,7 +166,7 @@ class Articulo
     /**
      * Set the value of idmarca
      */
-    public function setIdmarca(\Marca $idmarca): self
+    public function setIdmarca(Marca $idmarca): self
     {
         $this->idmarca = $idmarca;
 

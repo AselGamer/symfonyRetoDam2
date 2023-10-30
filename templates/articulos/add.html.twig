@@ -6,7 +6,7 @@
     <div class="container">
     <div class="row">
         <div class="login-form bg-light mt-4 p-4">
-            <form method="post" class="row g-3" action="{{ path('app_articulos_add') }}">
+            <form method="post" class="row g-3" action="{{ path('app_articulos_add') }}" enctype='multipart/form-data'>
                 <h1 class="h3 mb-3 font-weight-normal">Añadir Producto</h1>
                 <div class="col-12">
                     <label for="nombre">Nombre</label>
@@ -14,11 +14,11 @@
                 </div>
                 <div class="col-12">
                     <label for="precio">Precio</label>
-                    <input type="text" name="precio" id="precio" class="form-control" required>
+                    <input type="number" name="precio" id="precio" class="form-control" required>
                 </div>
                 <div class="col-12">
                     <label for="stock">Stock</label>
-                    <input type="text" name="stock" id="stock" class="form-control" required>
+                    <input type="number" name="stock" id="stock" class="form-control" required>
                 </div>
                 <div class="col-12">
                     <label for="foto">Foto</label>
@@ -35,13 +35,13 @@
                 <div class="col-12">
                     <label for="tipo">Tipo Producto</label>
                     <select name="tipo" id="tipo" class="form-select" required>
-                        <option name="Consola" id="consola", class="form-select">Consola</option>
-                        <option name="VideoJuego" id="videojuego", class="form-select">VideoJuego</option>
-                        <option name="DispositivoMovil" id="dipositivo", class="form-select">Dispositivo Movil</option>
+                        <option name="Consola" class="form-select">Consola</option>
+                        <option name="VideoJuego" class="form-select">VideoJuego</option>
+                        <option name="DispositivoMovil" class="form-select">Dispositivo Movil</option>
                     </select>
                 </div>
 
-                <div class="hidden">
+                <div id="dispositivo" class="hidden">
                     <div class="col-12">
                         <label for="almacenamiento">Almacenamiento</label>
                         <input type="text" name="almacenamiento" id="alamcenamiento" class="form-control">
@@ -54,7 +54,50 @@
                         <label for="pantalla">Tamano Pantalla (en Pulgadas)</label>
                         <input type="text" name="pantalla" id="pantalla" class="form-control">
                     </div>
+                </div>
+
+                <div id="consola">
+                    <div class="col-12">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" name="modelo" id="modelo" class="form-control">
                     </div>
+                    <div class="col-12">
+                        <label for="cant_mandos">Cantidad de Mandos</label>
+                        <input type="number" name="cant_mandos" id="cant_mandos" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="almacenamientoConsola">Almacenamiento</label>
+                        <input type="text" name="almacenamientoConsola" id="alamcenamientoConsola" class="form-control">
+                    </div>
+                </div>
+
+                <div id="dipositivo" class="hidden">
+                    <div class="col-12">
+                        <label for="almacenamiento">Almacenamiento</label>
+                        <input type="text" name="almacenamiento" id="alamcenamiento" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="ram">RAM (en GB)</label>
+                        <input type="text" name="ram" id="ram" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="pantalla">Tamano Pantalla (en Pulgadas)</label>
+                        <input type="text" name="pantalla" id="pantalla" class="form-control">
+                    </div>
+                </div>
+
+                <div id="videojuego" class="hidden">
+                    <div class="col-12">
+                        <label for="plataforma">Plataforma</label>
+                        <select name="plataforma" id="plataforma" class="form-select">
+                        {% for plataforma in plataformas %}
+                            <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                </div>
+
+                
                 <div class="col-12">
                 <br>
                     <button class="btn btn-lg btn-primary float-end" type="submit">

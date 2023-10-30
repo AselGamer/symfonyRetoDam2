@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Articulo;
 
 /**
  * Consola
@@ -43,7 +44,7 @@ class Consola
     private $almacenamiento;
 
     /**
-     * @var \Articulo
+     * @var Articulo
      *
      * @ORM\ManyToOne(targetEntity="Articulo")
      * @ORM\JoinColumns({
@@ -53,4 +54,94 @@ class Consola
     private $idarticulo;
 
 
+
+    /**
+     * Get the value of idconsola
+     */
+    public function getIdconsola(): int
+    {
+        return $this->idconsola;
+    }
+
+    /**
+     * Set the value of idconsola
+     */
+    public function setIdconsola(int $idconsola): self
+    {
+        $this->idconsola = $idconsola;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of modelo
+     */
+    public function getModelo(): ?string
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * Set the value of modelo
+     */
+    public function setModelo(?string $modelo): self
+    {
+        $this->modelo = $modelo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of cantMandos
+     */
+    public function getCantMandos(): ?string
+    {
+        return $this->cantMandos;
+    }
+
+    /**
+     * Set the value of cantMandos
+     */
+    public function setCantMandos(?string $cantMandos): self
+    {
+        $this->cantMandos = $cantMandos;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of almacenamiento
+     */
+    public function getAlmacenamiento(): ?string
+    {
+        return $this->almacenamiento;
+    }
+
+    /**
+     * Set the value of almacenamiento
+     */
+    public function setAlmacenamiento(?string $almacenamiento): self
+    {
+        $this->almacenamiento = $almacenamiento;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idarticulo
+     */
+    public function getIdarticulo(): ?Articulo
+    {
+        return $this->idarticulo;
+    }
+
+    /**
+     * Set the value of idarticulo
+     */
+    public function setIdarticulo(?Articulo $idarticulo): self
+    {
+        $this->idarticulo = $idarticulo;
+
+        return $this;
+    }
 }

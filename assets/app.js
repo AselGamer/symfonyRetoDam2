@@ -12,7 +12,35 @@ import 'bootstrap';
 
 jQuery(window).on('load', function() {
 
+    showFields(jQuery('#tipo').val());
+
+
     jQuery('#tipo').on('change', function() {
-        console.log(jQuery(this).val());
+        showFields(jQuery(this).val());
     });
+
+    function showFields(field) {
+        switch (field) {
+            case "Consola":
+                jQuery('#consola').show();
+                jQuery('#dipositivo').hide();
+                jQuery('#videojuego').hide();
+                break;
+            case "Dispositivo Movil":
+                jQuery('#consola').hide();
+                jQuery('#dipositivo').show();
+                jQuery('#videojuego').hide();
+                break;
+            case "VideoJuego":
+                jQuery('#consola').hide();
+                jQuery('#dipositivo').hide();
+                jQuery('#videojuego').show();
+                break;
+            default:
+                jQuery('#consola').hide();
+                jQuery('#dipositivo').hide();
+                jQuery('#videojuego').hide();
+                break;
+        }
+    }
 });
