@@ -5,17 +5,18 @@ namespace App\Controller;
 use App\Entity\Marca;
 use App\Entity\Consola;
 use App\Entity\Articulo;
-use App\Entity\Dispositivomovil;
 use App\Entity\Plataforma;
 use App\Entity\Videojuego;
 use App\Entity\VistaEntity;
+use App\Entity\Dispositivomovil;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ArticulosController extends AbstractController
 {
@@ -45,16 +46,41 @@ class ArticulosController extends AbstractController
     }
 
     #[Route('/articulos/add', name: 'app_articulos_add', methods:['GET', 'POST'])]
-    public function addArticulos(): Response
+    public function addArticulos(Request $request, SluggerInterface $sluggerInterface): Response
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = false;
+            $nombreFoto = '';
             $articulo = new Articulo();
                     empty($_POST['nombre']) ? $error = true : $articulo->setNombre($_POST['nombre']);
                     empty($_POST['precio']) ? $error = true : $articulo->setPrecio($_POST['precio']);
                     empty($_POST['stock']) ? $error = true : $articulo->setStock($_POST['stock']);
                     //Implementar codigo de subida de fotos
-                    empty($_FILES['foto']['name']) ? $error = true : $articulo->setFoto($_FILES['foto']['name']);
+                    if (empty($_FILES['foto']['name'])) {
+                        $error = true;
+                    } else {
+                        if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg') 
+                        {
+                            $error = true;
+                        } else
+                        {
+                            $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
+                            $nombreFoto = $nombreFoto . '-' . uniqid() . '.' . pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                            try {
+                                /** @var UploadedFile $uploadedFile */
+                                $uploadedFile = $request->files->get('foto');
+
+                                $uploadedFile->move(
+                                    $this->getParameter('images_directory'),
+                                    $nombreFoto
+                                );
+                                $articulo->setFoto($nombreFoto);
+                                
+                            } catch (FileException $e) {
+                                $error = true;
+                            }
+                        }
+                    }
                     empty($_POST['idMarca']) ? $error = true : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
             switch ($_POST['tipo']) {
                 
@@ -176,7 +202,7 @@ class ArticulosController extends AbstractController
     }
 
     #[Route('/articulos/edit/{id}', name: 'app_articulos_edit', methods:['GET', 'POST'])]
-    public function edit(int $id): Response
+    public function edit(int $id, SluggerInterface $sluggerInterface, Request $request): Response
     {
 
         $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
@@ -191,8 +217,31 @@ class ArticulosController extends AbstractController
             empty($_POST['nombre']) ? : $articulo->setNombre($_POST['nombre']);
             empty($_POST['precio']) ? : $articulo->setPrecio($_POST['precio']);
             empty($_POST['stock']) ? : $articulo->setStock($_POST['stock']);
-            //Implementar codigo de subida de fotos
-            empty($_FILES['foto']['name']) ? : $articulo->setFoto($_FILES['foto']['name']);
+            if (empty($_FILES['foto']['name'])) {
+                
+            } else {
+                if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg') 
+                {
+                    
+                } else
+                {
+                    $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
+                    $nombreFoto = $nombreFoto . '-' . uniqid() . '.' . pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                    try {
+                        /** @var UploadedFile $uploadedFile */
+                        $uploadedFile = $request->files->get('foto');
+
+                        $uploadedFile->move(
+                            $this->getParameter('images_directory'),
+                            $nombreFoto
+                        );
+                        $articulo->setFoto($nombreFoto);
+                        
+                    } catch (FileException $e) {
+                        $error = true;
+                    }
+                }
+            }
             empty($_POST['idMarca']) ? : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
             $this->entityManager->persist($articulo);
             $this->entityManager->flush();

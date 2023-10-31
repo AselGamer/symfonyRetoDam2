@@ -51,9 +51,9 @@
             <td>{{ articulos.nombre }}</td>
             <td>{{ articulos.precio }}</td>
             <td>{{ articulos.stock }}</td>
-            <td>{{ articulos.foto }}</td>
-            <form action="{{ path('app_articulos_delete', {'id': articulos.idArticulo}) }}" method="post"><td><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></td></form>
-            <td><a href="{{ path('app_articulos_edit', {'id': articulos.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></td>
+            <td><img class="fotoArticulo" src="{{images_directory}}{{ articulos.foto }}"></img></td>
+            <td><div id="tdEliminar"><form action="{{ path('app_articulos_delete', {'id': articulos.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+            <td><div id="tdEditar"><a href="{{ path('app_articulos_edit', {'id': articulos.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
         </tr>
         {% endfor %}
         </tbody>
