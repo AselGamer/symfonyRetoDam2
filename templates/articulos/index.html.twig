@@ -44,23 +44,23 @@
            </tr>
        </thead>
         <tbody>
-        {% for articulos in articulos %}
+        {% for articulo in articulos %}
         <tr>
-            <td>{{ articulos.idArticulo }}</td>
-            <td>{{ articulos.idmarca }}</td>
-            <td>{{ articulos.nombre }}</td>
-            <td>{{ articulos.precio }}</td>
-            <td>{{ articulos.stock }}</td>
-            <td><img class="fotoArticulo" src="{{images_directory}}{{ articulos.foto }}"></img></td>
-            <td><div id="tdEliminar"><form action="{{ path('app_articulos_delete', {'id': articulos.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
-            <td><div id="tdEditar"><a href="{{ path('app_articulos_edit', {'id': articulos.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
+            <td>{{ articulo.idArticulo }}</td>
+            <td>{{ articulo.idmarca }}</td>
+            <td>{{ articulo.nombre }}</td>
+            <td>{{ articulo.precio }}</td>
+            <td>{{ articulo.stock }}</td>
+            <td><img class="fotoArticulo" src="{{images_directory}}{{ articulo.foto }}"></img></td>
+            <td><div id="tdEliminar"><form action="{{ path('app_articulo_delete', {'id': articulo.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+            <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 
-        <a href="{{ path('app_articulos_add') }}" >
-            <button class="btn btn-lg btn-primary float-start">Añadir Producto</button>
+        <a href="{{ path('app_articulo_add') }}" >
+            <button class="btn btn-lg btn-primary float-start">Añadir Articulo</button>
         </a>
 
 {% endblock %}

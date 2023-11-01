@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Añadir Producto{% endblock %}
+{% block title %}Añadir Articulo{% endblock %}
 
 {% block body %}
     <div class="container">
     <div class="row">
         <div class="login-form bg-light mt-4 p-4">
-            <form method="post" class="row g-3" action="{{ path('app_articulos_add') }}" enctype='multipart/form-data'>
-                <h1 class="h3 mb-3 font-weight-normal">Añadir Producto</h1>
+            <form method="post" class="row g-3" action="{{ path('app_articulo_add') }}" enctype='multipart/form-data'>
+                <h1 class="h3 mb-3 font-weight-normal">Añadir Articulo</h1>
                 <div class="col-12">
                     <label for="nombre">Nombre</label>
                     <input type="text" name="nombre" id="nombre" class="form-control" required>
@@ -101,7 +101,7 @@
                 <div class="col-12">
                 <br>
                     <button class="btn btn-lg btn-primary float-end" type="submit">
-                        Añadir Producto
+                        Añadir Articulo
                     </button>
                 </div>
             </form>

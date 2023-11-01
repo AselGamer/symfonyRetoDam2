@@ -6,8 +6,8 @@
     <div class="container">
     <div class="row">
         <div class="login-form bg-light mt-4 p-4">
-            <form method="post" class="row g-3" action="{{ path('app_articulos_edit', {'id': articulo.idArticulo}) }}" enctype='multipart/form-data'>
-                <h1 class="h3 mb-3 font-weight-normal">Editar Producto</h1>
+            <form method="post" class="row g-3" action="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}" enctype='multipart/form-data'>
+                <h1 class="h3 mb-3 font-weight-normal">Editar Articulo</h1>
                 <div class="col-12">
                     <label for="nombre">Nombre</label>
                     <input type="text" name="nombre" id="nombre" class="form-control" value="{{ articulo.nombre }}" required>
@@ -105,7 +105,7 @@
                 <div class="col-12">
                 <br>
                     <button class="btn btn-lg btn-primary float-end" type="submit">
-                        Editar Producto
+                        Editar Articulo
                     </button>
                 </div>
             </form>

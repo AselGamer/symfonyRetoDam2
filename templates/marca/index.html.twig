@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Marcas{% endblock %}
+
+
+
+{% block body %}
+    <h1>Marcas</h1>
+
+    {% if error %}
+        <div>
+            <h2>{{ error }}</h2>
+        </div>
+    {% endif %}
+
+    <table class = "text-center table table-bordered">
+       <thead>
+           <tr>
+               <th>
+                   ID
+               </th>
+               <th>
+                   NOMBRE
+               </th>
+               <th>
+                   EDITAR
+               </th>
+               <th>
+                   ELIMINAR
+               </th>
+           </tr>
+       </thead>
+        <tbody>
+        {% for marca in marcas %}
+        <tr>
+            <td>{{ marca.idMarca }}</td>
+            <td>{{ marca.nombre }}</td>
+            <td><div id="tdEliminar"><form action="{{ path('app_marca_delete', {'id': marca.idMarca}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+            <td><div id="tdEditar"><a href="{{ path('app_marca_edit', {'id': marca.idMarca}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <a href="{{ path('app_marca_add') }}" >
+            <button class="btn btn-lg btn-primary float-start">Añadir Marca</button>
+        </a>
+
+{% endblock %}

@@ -9,7 +9,6 @@ use App\Entity\Plataforma;
 use App\Entity\Videojuego;
 use App\Entity\VistaEntity;
 use App\Entity\Dispositivomovil;
-use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-class ArticulosController extends AbstractController
+class ArticuloController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
@@ -27,7 +26,7 @@ class ArticulosController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/articulos', name: 'app_articulos')]
+    #[Route('/articulos', name: 'app_articulo')]
     public function index(Request $request): Response
     {
         $error = $request->getContent();
@@ -45,7 +44,7 @@ class ArticulosController extends AbstractController
         return $this->render('articulos/index.html.twig', $parametros);
     }
 
-    #[Route('/articulos/add', name: 'app_articulos_add', methods:['GET', 'POST'])]
+    #[Route('/articulos/add', name: 'app_articulo_add', methods:['GET', 'POST'])]
     public function addArticulos(Request $request, SluggerInterface $sluggerInterface): Response
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -98,14 +97,14 @@ class ArticulosController extends AbstractController
                         if (!$error) {
                             $this->entityManager->persist($consola);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulos');
+                            return $this->redirectToRoute('app_articulo');
                         } else {
                             $this->entityManager->remove($articulo);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulos', ['error' => 'fallo al crear la consola']);
+                            return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear la consola']);
                         }
                     } else {
-                        return $this->redirectToRoute('app_articulos', ['error' => 'fallo al crear el producto']);
+                        return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
                     }
                     break;
                 case 'Dispositivo Movil':
@@ -122,15 +121,15 @@ class ArticulosController extends AbstractController
                         if (!$error) {
                             $this->entityManager->persist($dispMovil);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulos');
+                            return $this->redirectToRoute('app_articulo');
                         } else {
                             
                             $this->entityManager->remove($articulo);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulos', ['error' => 'fallo al crear el dispositivo']);
+                            return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el dispositivo']);
                         }
                     } else {
-                        return $this->redirectToRoute('app_articulos', ['error' => 'fallo al crear el producto']);
+                        return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
                     }
                     break;
                 case 'VideoJuego':
@@ -145,21 +144,21 @@ class ArticulosController extends AbstractController
                         if (!$error) {
                             $this->entityManager->persist($videoJuego);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulos');
+                            return $this->redirectToRoute('app_articulo');
                         } else {
                             $this->entityManager->remove($articulo);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulos', ['error' => 'fallo al crear el videojuego']);
+                            return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el videojuego']);
                         }
                     } else {
-                        return $this->redirectToRoute('app_articulos', ['error' => 'fallo al crear el producto']);
+                        return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
                     }
                     break;
                 default:
 
                     break;
             }
-            return $this->redirectToRoute('app_articulos');
+            return $this->redirectToRoute('app_articulo');
         } else {
             $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
             $parametros['marcas'] = $marcas;
@@ -169,7 +168,7 @@ class ArticulosController extends AbstractController
         return $this->render('articulos/add.html.twig', $parametros);
     }
 
-    #[Route('/articulos/delete/{id}', name: 'app_articulos_delete', methods:['POST'])]
+    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['POST'])]
     public function delete(int $id): Response
     {
 
@@ -198,10 +197,10 @@ class ArticulosController extends AbstractController
         $this->entityManager->remove($articulo);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_articulos');
+        return $this->redirectToRoute('app_articulo');
     }
 
-    #[Route('/articulos/edit/{id}', name: 'app_articulos_edit', methods:['GET', 'POST'])]
+    #[Route('/articulos/edit/{id}', name: 'app_articulo_edit', methods:['GET', 'POST'])]
     public function edit(int $id, SluggerInterface $sluggerInterface, Request $request): Response
     {
 
@@ -268,7 +267,7 @@ class ArticulosController extends AbstractController
             }
             $this->entityManager->persist($articuloTipo);
             $this->entityManager->flush();
-            return $this->redirectToRoute('app_articulos');
+            return $this->redirectToRoute('app_articulo');
         } else {    
             switch ($vistaTipo->getTipoarticulo()) {
                 case 'Consola':
