@@ -19,7 +19,7 @@ class PlataformaController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/plataformas', name: 'app_plataforma')]
+    #[Route('/plataforma', name: 'app_plataforma')]
     public function index(): Response
     {
         $error = false;
