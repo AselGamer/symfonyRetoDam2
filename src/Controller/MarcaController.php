@@ -68,7 +68,6 @@ class MarcaController extends AbstractController
         if ($nombre) {
             $marca->setNombre($nombre);
 
-            $this->entityManager->persist($marca);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_marca');

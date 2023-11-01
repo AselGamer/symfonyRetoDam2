@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Plataformas{% endblock %}
+
+
+
+{% block body %}
+    <h1>Plataformas</h1>
+
+    {% if error %}
+        <div>
+            <h2>{{ error }}</h2>
+        </div>
+    {% endif %}
+
+    <table class = "text-center table table-bordered">
+       <thead>
+           <tr>
+               <th>
+                   ID
+               </th>
+               <th>
+                   NOMBRE
+               </th>
+               <th>
+                   EDITAR
+               </th>
+               <th>
+                   ELIMINAR
+               </th>
+           </tr>
+       </thead>
+        <tbody>
+        {% for plataforma in plataformas %}
+        <tr>
+            <td>{{ plataforma.idPlataforma }}</td>
+            <td>{{ plataforma.nombre }}</td>
+            <td><div id="tdEliminar"><form action="{{ path('app_plataforma_delete', {'id': plataforma.idPlataforma}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+            <td><div id="tdEditar"><a href="{{ path('app_plataforma_edit', {'id': plataforma.idPlataforma}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <a href="{{ path('app_plataforma_add') }}" >
+            <button class="btn btn-lg btn-primary float-start">Añadir Plataforma</button>
+        </a>
+
+{% endblock %}
