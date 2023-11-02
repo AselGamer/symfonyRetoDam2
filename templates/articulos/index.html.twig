@@ -36,6 +36,9 @@
                    FOTO
                </th>
                <th>
+                   TIPO
+               </th>
+               <th>
                    BORRAR
                </th>
                <th>
@@ -48,10 +51,11 @@
         <tr>
             <td>{{ articulo.idArticulo }}</td>
             <td>{{ articulo.idmarca }}</td>
-            <td>{{ articulo.nombre }}</td>
+            <td>{{ articulo.articulonombre }}</td>
             <td>{{ articulo.precio }}</td>
             <td>{{ articulo.stock }}</td>
             <td><img class="fotoArticulo" src="{{images_directory}}{{ articulo.foto }}"></img></td>
+            <td>{{ articulo.tipoarticulo }}</td>
             <td><div id="tdEliminar"><form action="{{ path('app_articulo_delete', {'id': articulo.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
             <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
         </tr>
@@ -62,5 +66,27 @@
         <a href="{{ path('app_articulo_add') }}" >
             <button class="btn btn-lg btn-primary float-start">Añadir Articulo</button>
         </a>
+
+        <h1>Lista de Consola</h1>
+    <table class = "text-center table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    NOMBRE
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for consola in consolas %}
+                <tr>
+                    <td>{{ consola.idtipoclase }}</td>
+                    <td>{{ consola.articulonombre }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}

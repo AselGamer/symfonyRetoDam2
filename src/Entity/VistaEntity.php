@@ -10,7 +10,7 @@ use App\Repository\VistaEntityRepository;
  * ArticuloTypeView
  *
  * @ORM\Table(name="ArticuloTypeView")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=VistaEntityRepository::class)
  */
 class VistaEntity
 {
@@ -40,7 +40,7 @@ class VistaEntity
     /**
      * @var float|null
      *
-     * @ORM\Column(name="precio", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="precio", type="float", precision=10, scale=0, nullable=true, options={"collation":"utf8mb4_0900_ai_ci"})
      */
     private $precio;
 

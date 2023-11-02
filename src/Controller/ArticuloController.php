@@ -37,9 +37,13 @@ class ArticuloController extends AbstractController
 
         $parametros['titulo'] = 'Articulos';
 
-        $articulos = $this->entityManager->getRepository(Articulo::class)->findAll();
+        $articulos = $this->entityManager->getRepository(VistaEntity::class)->findAll();
 
         $parametros['articulos'] = $articulos;
+
+        $consolas = $this->entityManager->getRepository(VistaEntity::class)->findBy(array('tipoarticulo' => 'Consola'));
+
+        $parametros['consolas'] = $consolas;
 
         return $this->render('articulos/index.html.twig', $parametros);
     }
@@ -58,7 +62,7 @@ class ArticuloController extends AbstractController
                     if (empty($_FILES['foto']['name'])) {
                         $error = true;
                     } else {
-                        if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg') 
+                        if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'webp') 
                         {
                             $error = true;
                         } else
