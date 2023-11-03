@@ -66,14 +66,30 @@
                         <input type="number" name="cant_mandos" id="cant_mandos" class="form-control">
                     </div>
                     <div class="col-12">
-                        <label for="almacenamientoConsola">Almacenamiento</label>
+                        <label for="almacenamientoConsola">Almacenamiento (en GB)</label>
                         <input type="text" name="almacenamientoConsola" id="alamcenamientoConsola" class="form-control">
+                    </div>
+                        <div class="col-12" id="plataformas">
+                            <h3>Plataformas</h3>
+                            <div id="contPlataformas">
+                                <div class="plataformaPlantilla">
+                                    <label for="plataformas">Plataforma 1</label>
+                                    <div class="plataformaPlantillaInner">
+                                        <select name="plataformas[]" class="form-select" >
+                                        {% for plataforma in plataformas %}
+                                            <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        <button type="button" class="btn btn-secondary btnAddPlataforma">+</button>
                     </div>
                 </div>
 
                 <div id="dipositivo" class="hidden">
                     <div class="col-12">
-                        <label for="almacenamiento">Almacenamiento</label>
+                        <label for="almacenamiento">Almacenamiento (en GB)</label>
                         <input type="text" name="almacenamiento" id="alamcenamiento" class="form-control">
                     </div>
                     <div class="col-12">

@@ -21,7 +21,7 @@
                    ID
                </th>
                <th>
-                   MARCA
+                   IDMARCA
                </th>
                <th>
                    NOMBRE
@@ -66,27 +66,5 @@
         <a href="{{ path('app_articulo_add') }}" >
             <button class="btn btn-lg btn-primary float-start">Añadir Articulo</button>
         </a>
-
-        <h1>Lista de Consola</h1>
-    <table class = "text-center table table-bordered">
-        <thead>
-            <tr>
-                <th>
-                    ID
-                </th>
-                <th>
-                    NOMBRE
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for consola in consolas %}
-                <tr>
-                    <td>{{ consola.idtipoclase }}</td>
-                    <td>{{ consola.articulonombre }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
 {% endblock %}

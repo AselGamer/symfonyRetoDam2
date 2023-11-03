@@ -80,6 +80,32 @@
                             <label for="almacenamientoConsola">Almacenamiento</label>
                             <input type="text" name="almacenamientoConsola" id="alamcenamientoConsola" class="form-control" value="{{datosExtra.almacenamiento}}">
                         </div>
+                        {% if datosExtraExtra != null %}
+                        {% set count = 1 %}
+                            <div class="col-12" id="plataformas">
+                            <h3>Plataformas</h3>
+                            {% for plataformaExtra in datosExtraExtra %}
+                                <div id="contPlataformas">
+                                    <div class="plataformaPlantilla">
+                                        <label for="plataformas">Plataforma {{ count }}</label>
+                                        <div class="plataformaPlantillaInner">
+                                            <select name="plataformas[]" class="form-select" >
+                                            {% for plataforma in plataformas %}
+                                                {% if plataformaExtra.idPlataforma.idPlataforma == plataforma.idPlataforma %}
+                                                    <option value="{{ plataforma.idPlataforma }}" selected>{{ plataforma.nombre }}</option>
+                                                    {% else %}
+                                                    <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% set count = count + 1 %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        <button type="button" class="btn btn-secondary btnAddPlataforma">+</button>
+                    </div>
+                        {% endif %}
                     </div>
                 {% endif %}
 

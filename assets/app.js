@@ -7,13 +7,14 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
-import jQuery, { map } from 'jquery';
+import jQuery from 'jquery';
 import 'bootstrap';
 
 jQuery(window).on('load', function() {
 
-    showFields(jQuery('#tipo').val());
+    let cantPlataformas = 1;
 
+    showFields(jQuery('#tipo').val());
 
     jQuery('#tipo').on('change', function() {
         showFields(jQuery(this).val());
@@ -43,4 +44,29 @@ jQuery(window).on('load', function() {
                 break;
         }
     }
+
+    jQuery('.btnAddPlataforma').on('click', function() {
+
+        let plataforma = jQuery('.plataformaPlantilla').last().clone();
+        cantPlataformas++;
+
+        plataforma.find('label').each(function() {
+            console.log(jQuery(this).html());
+            let label = jQuery(this).html();
+            label = label.replace(cantPlataformas-1, cantPlataformas);
+            jQuery(this).html(label);
+        });
+
+        removeButton();
+
+        addPlataforma();
+
+        function removeButton() {
+            jQuery('.plataformaPlantilla').children('button').remove();
+        }
+
+        function addPlataforma() {
+            jQuery('#contPlataformas').append(plataforma);
+        }
+    });
 });

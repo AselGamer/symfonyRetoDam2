@@ -9,6 +9,7 @@ use App\Entity\Plataforma;
 use App\Entity\Videojuego;
 use App\Entity\VistaEntity;
 use App\Entity\Dispositivomovil;
+use App\Entity\Plataformaconsola;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,10 +42,6 @@ class ArticuloController extends AbstractController
 
         $parametros['articulos'] = $articulos;
 
-        $consolas = $this->entityManager->getRepository(VistaEntity::class)->findBy(array('tipoarticulo' => 'Consola'));
-
-        $parametros['consolas'] = $consolas;
-
         return $this->render('articulos/index.html.twig', $parametros);
     }
 
@@ -55,41 +52,40 @@ class ArticuloController extends AbstractController
             $error = false;
             $nombreFoto = '';
             $articulo = new Articulo();
-                    empty($_POST['nombre']) ? $error = true : $articulo->setNombre($_POST['nombre']);
-                    empty($_POST['precio']) ? $error = true : $articulo->setPrecio($_POST['precio']);
-                    empty($_POST['stock']) ? $error = true : $articulo->setStock($_POST['stock']);
-                    //Implementar codigo de subida de fotos
-                    if (empty($_FILES['foto']['name'])) {
-                        $error = true;
-                    } else {
-                        if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'webp') 
-                        {
-                            $error = true;
-                        } else
-                        {
-                            $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
-                            $nombreFoto = $nombreFoto . '-' . uniqid() . '.' . pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-                            try {
-                                /** @var UploadedFile $uploadedFile */
-                                $uploadedFile = $request->files->get('foto');
+            empty($_POST['nombre']) ? $error = true : $articulo->setNombre($_POST['nombre']);
+            empty($_POST['precio']) ? $error = true : $articulo->setPrecio($_POST['precio']);
+            empty($_POST['stock']) ? $error = true : $articulo->setStock($_POST['stock']);
 
-                                $uploadedFile->move(
-                                    $this->getParameter('images_directory'),
-                                    $nombreFoto
-                                );
-                                $articulo->setFoto($nombreFoto);
-                                
-                            } catch (FileException $e) {
-                                $error = true;
-                            }
-                        }
+            if (empty($_FILES['foto']['name'])) {
+                $error = true;
+            } else {
+                if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'webp') 
+                {
+                    $error = true;
+                } else
+                {
+                    $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
+                    $nombreFoto = $nombreFoto . '-' . uniqid() . '.' . pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                    try {
+                        /** @var UploadedFile $uploadedFile */
+                        $uploadedFile = $request->files->get('foto');
+
+                        $uploadedFile->move(
+                            $this->getParameter('images_directory'),
+                            $nombreFoto
+                        );
+                        $articulo->setFoto($nombreFoto);
+                        
+                    } catch (FileException $e) {
+                        $error = true;
                     }
-                    empty($_POST['idMarca']) ? $error = true : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
+                }
+            }
+            empty($_POST['idMarca']) ? $error = true : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
             switch ($_POST['tipo']) {
                 
                 case 'Consola':
                     if (!$error) {
-                        
                         $this->entityManager->persist($articulo);
                         $this->entityManager->flush();
                         
@@ -101,6 +97,21 @@ class ArticuloController extends AbstractController
                         if (!$error) {
                             $this->entityManager->persist($consola);
                             $this->entityManager->flush();
+
+                            for ($i=0; $i < sizeof($_POST['plataformas']); $i++) { 
+                                $paltaformaConsola = new Plataformaconsola();
+                                $paltaformaConsola->setIdconsola($consola);
+                                $paltaforma = $this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataformas'][$i]));
+                                if (is_null($paltaforma)) {
+                                    return $this->redirectToRoute('app_articulo');
+                                } else {
+                                    $paltaformaConsola->setIdplataforma($paltaforma);
+                                    $this->entityManager->persist($paltaformaConsola);
+                                    $this->entityManager->flush();
+                                }
+                                
+                            }
+
                             return $this->redirectToRoute('app_articulo');
                         } else {
                             $this->entityManager->remove($articulo);
@@ -272,10 +283,12 @@ class ArticuloController extends AbstractController
             $this->entityManager->persist($articuloTipo);
             $this->entityManager->flush();
             return $this->redirectToRoute('app_articulo');
-        } else {    
+        } else {
+            $datosExtraExtra = null;    
             switch ($vistaTipo->getTipoarticulo()) {
                 case 'Consola':
                     $datosExtra = $this->entityManager->getRepository(Consola::class)->findOneBy(array('idconsola' => $vistaTipo->getIdtipoClase()));
+                    $datosExtraExtra = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(array('idconsola' => $vistaTipo->getIdtipoClase()));
                     break;
                 case 'DispositivoMovil':
                     $datosExtra = $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('iddispositivomovil' => $vistaTipo->getIdtipoClase()));
@@ -288,6 +301,7 @@ class ArticuloController extends AbstractController
                     break;
             }
             $parametros['datosExtra'] = $datosExtra;
+            $parametros['datosExtraExtra'] = $datosExtraExtra;
             $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
             $parametros['marcas'] = $marcas;
             $plataformas = $this->entityManager->getRepository(Plataforma::class)->findAll();

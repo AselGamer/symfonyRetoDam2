@@ -112,3 +112,22 @@ td
     width: 100px;
     height: 100px;
 }
+
+.plataformaPlantillaInner
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.plataformaPlantillaInner
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.btnAddPlataforma
+{
+    margin-top: 20px;
+    width: 100%;
+}

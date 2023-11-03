@@ -21,6 +21,22 @@ class VistaEntityRepository extends ServiceEntityRepository
         parent::__construct($registry, VistaEntity::class);
     }
 
+    /*
+    public function findConsolasWithPlataformas()
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT a.idtipoClase, 
+        a.articulonombre, 
+        GROUP_CONCAT(p.idplataforma) AS idPlataformas, 
+        GROUP_CONCAT(p.nombre) AS NombrePlataformas 
+        FROM App\Entity\VistaEntity a
+        INNER JOIN App\Entity\Plataformaconsola pc
+        INNER JOIN App\Entity\Plataforma p
+        WHERE a.tipoarticulo = 'Consola' 
+        GROUP BY a.idtipoClase, a.articulonombre");
+
+        return $query->getResult();
+    }
+*/
 //    /**
 //     * @return VistaEntity[] Returns an array of VistaEntity objects
 //     */
