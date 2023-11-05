@@ -4,13 +4,14 @@ namespace App\Entity;
 
 use App\Entity\Consola;
 use App\Entity\Plataforma;
+use App\Repository\PlataformaConsolaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Plataformaconsola
  *
  * @ORM\Table(name="PlataformaConsola", indexes={@ORM\Index(name="ConsolaPlataforma", columns={"idPlataforma"}), @ORM\Index(name="PlataformaConsola", columns={"idConsola"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=PlataformaConsolaRepository::class)
  */
 class Plataformaconsola
 {
@@ -74,7 +75,7 @@ class Plataformaconsola
     /**
      * Set the value of idconsola
      */
-    public function setIdconsola(Consola $idconsola): self
+    public function setIdconsola(Consola $idconsola)
     {
         $this->idconsola = $idconsola;
 
@@ -92,7 +93,7 @@ class Plataformaconsola
     /**
      * Set the value of idplataforma
      */
-    public function setIdplataforma(Plataforma $idplataforma): self
+    public function setIdplataforma(Plataforma $idplataforma)
     {
         $this->idplataforma = $idplataforma;
 

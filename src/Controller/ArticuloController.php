@@ -265,6 +265,19 @@ class ArticuloController extends AbstractController
                     empty($_POST['modelo']) ? : $articuloTipo->setModelo($_POST['modelo']);
                     empty($_POST['cant_mandos']) ? : $articuloTipo->setCantmandos($_POST['cant_mandos']);
                     empty($_POST['almacenamientoConsola']) ? : $articuloTipo->setAlmacenamiento($_POST['almacenamientoConsola']);
+                    $this->entityManager->getRepository(Plataformaconsola::class)->removeByConsola($articuloTipo->getIdconsola());
+                    for ($i=0; $i < sizeof($_POST['plataformas']); $i++) { 
+                        $paltaformaConsola = new Plataformaconsola();
+                        $paltaformaConsola->setIdconsola($articuloTipo);
+                        $paltaforma = $this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataformas'][$i]));
+                        if (is_null($paltaforma)) {
+                            return $this->redirectToRoute('app_articulo');
+                        } else {
+                            $paltaformaConsola->setIdplataforma($paltaforma);
+                            $this->entityManager->persist($paltaformaConsola);
+                            $this->entityManager->flush();
+                        }
+                    }
                     break;
                 case 'DispositivoMovil':
                     $articuloTipo = $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('idarticulo' => $id));
