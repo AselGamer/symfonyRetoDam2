@@ -193,6 +193,7 @@ class ArticuloController extends AbstractController
 
         switch ($vistaTipo->getTipoarticulo()) {
             case 'Consola':
+                $this->entityManager->getRepository(Plataformaconsola::class)->removeByConsola($vistaTipo->getIdtipoClase());
                 $this->entityManager->remove($this->entityManager->getRepository(Consola::class)->findOneBy(array('idarticulo' => $id)));
                 $this->entityManager->flush();
                 break;
