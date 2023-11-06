@@ -50,23 +50,38 @@ jQuery(window).on('load', function() {
         let plataforma = jQuery('.plataformaPlantilla').last().clone();
         cantPlataformas++;
 
+        /*
         plataforma.find('label').each(function() {
             console.log(jQuery(this).html());
             let label = jQuery(this).html();
             label = label.replace(cantPlataformas-1, cantPlataformas);
             jQuery(this).html(label);
         });
+        */
 
-        removeButton();
+        addRemoveButton(plataforma);
 
         addPlataforma();
-
-        function removeButton() {
-            jQuery('.plataformaPlantilla').children('button').remove();
-        }
 
         function addPlataforma() {
             jQuery('#contPlataformas').append(plataforma);
         }
+
+        function addRemoveButton(plataforma) {
+            console.log(!plataforma.find('.btnRemovePlataforma').length > 0);
+            if (cantPlataformas <= 2 && !plataforma.find('.btnRemovePlataforma').length > 0) {
+                plataforma.find('.plataformaPlantillaInner').append('<button type="button" class="btn btn-danger btnRemovePlataforma">X</button>');
+            }
+
+            plataforma.find('.btnRemovePlataforma').on('click', function() {
+                jQuery(this).parent().parent().remove();
+                cantPlataformas--;
+            });
+        }
+    });
+
+    jQuery('.btnRemovePlataforma').on('click', function() {
+        jQuery(this).parent().parent().remove();
+        cantPlataformas--;
     });
 });

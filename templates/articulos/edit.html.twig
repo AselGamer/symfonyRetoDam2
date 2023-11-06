@@ -87,7 +87,7 @@
                             {% for plataformaExtra in datosExtraExtra %}
                                 <div id="contPlataformas">
                                     <div class="plataformaPlantilla">
-                                        <label for="plataformas">Plataforma {{ count }}</label>
+                                    </br>
                                         <div class="plataformaPlantillaInner">
                                             <select name="plataformas[]" class="form-select" >
                                             {% for plataforma in plataformas %}
@@ -97,12 +97,31 @@
                                                     <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
                                                 {% endif %}
                                             {% endfor %}
-                                            {% set count = count + 1 %}
                                             </select>
+                                            {% if count > 1 %}
+                                                <button type="button" class="btn btn-danger btnRemovePlataforma">X</button>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
+                                {% set count = count + 1 %}
                             {% endfor %}
+                        <button type="button" class="btn btn-secondary btnAddPlataforma">+</button>
+                    </div>
+                        {% else %}
+                            <div class="col-12" id="plataformas">
+                            <h3>Plataformas</h3>
+                            <div id="contPlataformas">
+                                <div class="plataformaPlantilla">
+                                    <div class="plataformaPlantillaInner">
+                                        <select name="plataformas[]" class="form-select" >
+                                        {% for plataforma in plataformas %}
+                                            <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         <button type="button" class="btn btn-secondary btnAddPlataforma">+</button>
                     </div>
                         {% endif %}
