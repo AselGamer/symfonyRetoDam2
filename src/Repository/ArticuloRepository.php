@@ -14,6 +14,4 @@ class ArticuloRepository extends ServiceEntityRepository
         parent::__construct($registry, Articulo::class);
     }
 
-    
-
 }

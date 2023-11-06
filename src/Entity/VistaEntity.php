@@ -59,9 +59,12 @@ class VistaEntity
     private $foto;
 
     /**
-     * @var int
+     * @var Marca
      *
-     * @ORM\Column(name="idMarca", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Marca")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idMarca", referencedColumnName="idMarca")
+     * })
      */
     private $idmarca;
 
@@ -184,7 +187,7 @@ class VistaEntity
     /**
      * Get the value of idmarca
      */
-    public function getIdmarca(): int
+    public function getIdmarca(): Marca
     {
         return $this->idmarca;
     }
