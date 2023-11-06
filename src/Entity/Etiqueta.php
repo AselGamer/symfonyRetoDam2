@@ -29,4 +29,40 @@ class Etiqueta
     private $nombre;
 
 
+
+    /**
+     * Get the value of idetiqueta
+     */
+    public function getIdetiqueta(): int
+    {
+        return $this->idetiqueta;
+    }
+
+    /**
+     * Set the value of idetiqueta
+     */
+    public function setIdetiqueta(int $idetiqueta)
+    {
+        $this->idetiqueta = $idetiqueta;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nombre
+     */
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set the value of nombre
+     */
+    public function setNombre(?string $nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
 }

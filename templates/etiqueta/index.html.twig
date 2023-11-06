@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Etiquetas{% endblock %}
+
+
+
+{% block body %}
+    <h1>Etiquetas</h1>
+
+
+    <table class = "text-center table table-bordered">
+       <thead>
+           <tr>
+               <th>
+                   ID
+               </th>
+               <th>
+                   NOMBRE
+               </th>
+               <th>
+                   EDITAR
+               </th>
+               <th>
+                   ELIMINAR
+               </th>
+           </tr>
+       </thead>
+        <tbody>
+        {% for etiqueta in etiquetas %}
+        <tr>
+            <td>{{ etiqueta.idEtiqueta }}</td>
+            <td>{{ etiqueta.nombre }}</td>
+            <td><div id="tdEditar"><a href="{{ path('app_etiqueta_edit', {'id': etiqueta.idEtiqueta}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
+            <td><div id="tdEliminar"><form action="{{ path('app_etiqueta_delete', {'id': etiqueta.idEtiqueta}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <a href="{{ path('app_etiqueta_add') }}" >
+            <button class="btn btn-lg btn-primary float-start">Añadir Etiqueta</button>
+        </a>
+
+{% endblock %}

@@ -36,8 +36,8 @@
         <tr>
             <td>{{ marca.idMarca }}</td>
             <td>{{ marca.nombre }}</td>
-            <td><div id="tdEliminar"><form action="{{ path('app_marca_delete', {'id': marca.idMarca}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
             <td><div id="tdEditar"><a href="{{ path('app_marca_edit', {'id': marca.idMarca}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
+            <td><div id="tdEliminar"><form action="{{ path('app_marca_delete', {'id': marca.idMarca}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
         </tr>
         {% endfor %}
         </tbody>

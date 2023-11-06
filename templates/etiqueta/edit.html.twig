@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Etiqueta{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <div class="row">
+        <div class="login-form bg-light mt-4 p-4">
+            <form method="post" class="row g-3" action="{{ path('app_etiqueta_edit', {'id': etiqueta.idEtiqueta}) }}" enctype='multipart/form-data'>
+                <h1 class="h3 mb-3 font-weight-normal">Editar Etiqueta</h1>
+                <div class="col-12">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" value="{{ etiqueta.nombre }}" required>
+                </div>
+                
+                <div class="col-12">
+                <br>
+                    <button class="btn btn-lg btn-primary float-end" type="submit">
+                        Editar Etiqueta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
