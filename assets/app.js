@@ -13,6 +13,7 @@ import 'bootstrap';
 jQuery(window).on('load', function() {
 
     let cantPlataformas = 1;
+    let cantEtiqueta = 1;
 
     showFields(jQuery('#tipo').val());
 
@@ -50,15 +51,6 @@ jQuery(window).on('load', function() {
         let plataforma = jQuery('.plataformaPlantilla').last().clone();
         cantPlataformas++;
 
-        /*
-        plataforma.find('label').each(function() {
-            console.log(jQuery(this).html());
-            let label = jQuery(this).html();
-            label = label.replace(cantPlataformas-1, cantPlataformas);
-            jQuery(this).html(label);
-        });
-        */
-
         addRemoveButton(plataforma);
 
         addPlataforma();
@@ -68,7 +60,6 @@ jQuery(window).on('load', function() {
         }
 
         function addRemoveButton(plataforma) {
-            console.log(!plataforma.find('.btnRemovePlataforma').length > 0);
             if (cantPlataformas <= 2 && !plataforma.find('.btnRemovePlataforma').length > 0) {
                 plataforma.find('.plataformaPlantillaInner').append('<button type="button" class="btn btn-danger btnRemovePlataforma">X</button>');
             }
@@ -83,5 +74,33 @@ jQuery(window).on('load', function() {
     jQuery('.btnRemovePlataforma').on('click', function() {
         jQuery(this).parent().parent().remove();
         cantPlataformas--;
+    });
+
+    jQuery('.btnAddEtiqueta').on('click', function () {
+        let etiqueta = jQuery('.etiquetaPlantilla').last().clone();
+        cantEtiqueta++;
+
+        etiqueta.find('br').remove();
+
+        etiqueta.prepend('</br>');
+
+        addRemoveButton(etiqueta);
+
+        addEtiqueta();
+
+        function addEtiqueta() {
+            jQuery('#contEtiqueta').append(etiqueta);
+        }
+
+        function addRemoveButton(etiqueta) {
+            if (cantEtiqueta <= 2 && !etiqueta.find('.btnRemoveEtiqueta').length > 0) {
+                etiqueta.find('.etiquetaPlantillaInner').append('<button type="button" class="btn btn-danger btnRemoveEtiqueta">X</button>');
+            }
+
+            etiqueta.find('.btnRemoveEtiqueta').on('click', function() {
+                jQuery(this).parent().parent().remove();
+                cantEtiqueta--;
+            });
+        }
     });
 });

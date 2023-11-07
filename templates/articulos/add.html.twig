@@ -111,6 +111,21 @@
                         {% endfor %}
                     </select>
                     </div>
+                    <div class="col-12" id="etiqueta">
+                            <label>Etiquetas</label>
+                            <div id="contEtiqueta">
+                                <div class="etiquetaPlantilla">
+                                    <div class="etiquetaPlantillaInner">
+                                        <select name="etiquetas[]" class="form-select" >
+                                        {% for etiqueta in etiquetas %}
+                                            <option value="{{ etiqueta.idEtiqueta }}">{{ etiqueta.nombre }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        <button type="button" class="btn btn-secondary btnAddEtiqueta">+</button>
+                    </div>
                 </div>
 
                 

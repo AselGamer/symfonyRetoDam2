@@ -142,7 +142,37 @@
                             {% endfor %}
                         </select>
                         </div>
+                        {% if datosExtraExtra != null %}
+                        {% set count = 1 %}
+                        <div class="col-12" id="etiqueta">
+                            <label>Etiquetas</label>
+                            {% for etiquetaExtra in datosExtraExtra %}
+                            <div id="contEtiqueta">
+                                <div class="etiquetaPlantilla">
+                                    </br>
+                                    <div class="etiquetaPlantillaInner">
+                                        <select name="etiquetas[]" class="form-select" >
+                                        {% for etiqueta in etiquetas %}
+                                            {% if etiquetaExtra.idVideojuego.idVideojuego == datosExtra.idVideojuego %}
+                                                <option value="{{ etiqueta.idEtiqueta }}" selected>{{ etiqueta.nombre }}</option>
+                                                {% else %}
+                                                <option value="{{ etiqueta.idEtiqueta }}">{{ etiqueta.nombre }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </select>
+                                        {% if count > 1 %}
+                                            <button type="button" class="btn btn-danger btnRemovePlataforma">X</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% set count = count + 1 %}
+                            {% endfor %}
+                        <button type="button" class="btn btn-secondary btnAddEtiqueta">+</button>
+                        {% endif %}
+                        
                     </div>
+                </div>
                 {% endif %}
                 
 

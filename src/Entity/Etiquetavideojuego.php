@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Etiquetavideojuego
  *
  * @ORM\Table(name="EtiquetaVideoJuego", indexes={@ORM\Index(name="EtiquetaVideoJuegoVideoJuego", columns={"idVideojuego"}), @ORM\Index(name="EtiquetaVideoJuegoEtiqueta", columns={"idEtiqueta"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\EtiquetaVideojuegoRepository")
  */
 class Etiquetavideojuego
 {
@@ -22,7 +22,7 @@ class Etiquetavideojuego
     private $idetiquetavideojuego;
 
     /**
-     * @var \Videojuego
+     * @var Videojuego
      *
      * @ORM\ManyToOne(targetEntity="Videojuego")
      * @ORM\JoinColumns({
@@ -32,7 +32,7 @@ class Etiquetavideojuego
     private $idvideojuego;
 
     /**
-     * @var \Etiqueta
+     * @var Etiqueta
      *
      * @ORM\ManyToOne(targetEntity="Etiqueta")
      * @ORM\JoinColumns({
@@ -42,4 +42,58 @@ class Etiquetavideojuego
     private $idetiqueta;
 
 
+
+    /**
+     * Get the value of idetiquetavideojuego
+     */
+    public function getIdetiquetavideojuego(): int
+    {
+        return $this->idetiquetavideojuego;
+    }
+
+    /**
+     * Set the value of idetiquetavideojuego
+     */
+    public function setIdetiquetavideojuego(int $idetiquetavideojuego): self
+    {
+        $this->idetiquetavideojuego = $idetiquetavideojuego;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idvideojuego
+     */
+    public function getIdvideojuego(): Videojuego
+    {
+        return $this->idvideojuego;
+    }
+
+    /**
+     * Set the value of idvideojuego
+     */
+    public function setIdvideojuego(Videojuego $idvideojuego): self
+    {
+        $this->idvideojuego = $idvideojuego;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idetiqueta
+     */
+    public function getIdetiqueta(): Etiqueta
+    {
+        return $this->idetiqueta;
+    }
+
+    /**
+     * Set the value of idetiqueta
+     */
+    public function setIdetiqueta(Etiqueta $idetiqueta): self
+    {
+        $this->idetiqueta = $idetiqueta;
+
+        return $this;
+    }
 }

@@ -9,6 +9,8 @@ use App\Entity\Plataforma;
 use App\Entity\Videojuego;
 use App\Entity\VistaEntity;
 use App\Entity\Dispositivomovil;
+use App\Entity\Etiqueta;
+use App\Entity\Etiquetavideojuego;
 use App\Entity\Plataformaconsola;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -159,6 +161,20 @@ class ArticuloController extends AbstractController
                         if (!$error) {
                             $this->entityManager->persist($videoJuego);
                             $this->entityManager->flush();
+
+                            for ($i=0; $i < sizeof($_POST['etiquetas']); $i++) { 
+                                $etiquetavideojuego = new Etiquetavideojuego();
+                                var_dump([$i]);
+                                $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findOneBy(array('idetiqueta' => $_POST['etiquetas'][$i]));
+                                $etiquetavideojuego->setIdetiqueta($etiqueta);
+                                $etiquetavideojuego->setIdvideojuego($videoJuego);
+                                if (is_null($etiqueta)) {
+                                    return $this->redirectToRoute('app_articulo');
+                                } else {
+                                    $this->entityManager->persist($etiquetavideojuego);
+                                    $this->entityManager->flush();
+                                }
+                            }
                             return $this->redirectToRoute('app_articulo');
                         } else {
                             $this->entityManager->remove($articulo);
@@ -175,6 +191,8 @@ class ArticuloController extends AbstractController
             }
             return $this->redirectToRoute('app_articulo');
         } else {
+            $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findAll();
+            $parametros['etiquetas'] = $etiqueta;
             $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
             $parametros['marcas'] = $marcas;
             $plataformas = $this->entityManager->getRepository(Plataforma::class)->findAll();
@@ -203,6 +221,7 @@ class ArticuloController extends AbstractController
                 break;
             case 'Videojuego':
                 $this->entityManager->remove($this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idarticulo' => $id)));
+                $this->entityManager->getRepository(Etiquetavideojuego::class)->removeByVideojuego($vistaTipo->getIdtipoClase());
                 $this->entityManager->flush();
                 break;
             default:
@@ -309,16 +328,20 @@ class ArticuloController extends AbstractController
                     break;
                 case 'Videojuego':
                     $datosExtra = $this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idvideojuego' => $vistaTipo->getIdtipoClase()));
+                    $datosExtraExtra = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(array('idvideojuego' => $vistaTipo->getIdtipoClase()));
                     break;
                 default:
                     $datosExtra = null;
                     break;
             }
+            
             $parametros['datosExtra'] = $datosExtra;
             $parametros['datosExtraExtra'] = $datosExtraExtra;
             $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
             $parametros['marcas'] = $marcas;
             $plataformas = $this->entityManager->getRepository(Plataforma::class)->findAll();
+            $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findAll();
+            $parametros['etiquetas'] = $etiqueta;
             $parametros['plataformas'] = $plataformas;
 
             return $this->render('articulos/edit.html.twig', $parametros);
