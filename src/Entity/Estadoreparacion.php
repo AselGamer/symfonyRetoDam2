@@ -24,9 +24,46 @@ class Estadoreparacion
     /**
      * @var string
      *
-     * @ORM\Column(name="estado", type="string", length=30, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=30, nullable=false)
      */
-    private $estado;
+    private $nombre;
 
 
+
+    function __toString()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Get the value of idestadoreparacion
+     */
+    public function getIdestadoreparacion(): int
+    {
+        return $this->idestadoreparacion;
+    }
+
+    /**
+     * Set the value of idestadoreparacion
+     */
+    public function setIdestadoreparacion(int $idestadoreparacion)
+    {
+        $this->idestadoreparacion = $idestadoreparacion;
+    }
+
+    /**
+     * Get the value of nombre
+     */
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set the value of nombre
+     */
+    public function setNombre(string $nombre)
+    {
+        $this->nombre = $nombre;
+    }
 }

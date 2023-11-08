@@ -69,7 +69,10 @@ class Empleado implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $roles = [];
 
-    
+    function __toString()
+    {
+        return $this->nombre;
+    }
 
     /**
      * Get the value of idempleado

@@ -5,18 +5,24 @@ namespace App\Controller;
 use App\Entity\Marca;
 use App\Entity\Consola;
 use App\Entity\Articulo;
+use App\Entity\Etiqueta;
 use App\Entity\Plataforma;
 use App\Entity\Videojuego;
 use App\Entity\VistaEntity;
 use App\Entity\Dispositivomovil;
-use App\Entity\Etiqueta;
-use App\Entity\Etiquetavideojuego;
 use App\Entity\Plataformaconsola;
+use App\Entity\Etiquetavideojuego;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -359,5 +365,23 @@ class ArticuloController extends AbstractController
 
             return $this->render('articulos/edit.html.twig', $parametros);
         }
+    }
+
+    #[Route('/api/articulos', name: 'app_articulo_api', methods:['GET'])]
+    public function indexApi(): Response
+    {
+        $articulos = $this->entityManager->getRepository(VistaEntity::class)->findAll();
+
+        return $this->convertToJson($articulos);   
+    }
+
+    private function convertToJson($object): JsonResponse
+    {
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        $normalized = $serializer->normalize($object, null, array(DateTimeNormalizer::FORMAT_KEY=>'Y/m/d'));
+        $jsonContent = $serializer->serialize($normalized, 'json');
+        return JsonResponse::fromJsonString($jsonContent, 200);
     }
 }

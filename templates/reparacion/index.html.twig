@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Reparaciones{% endblock %}
+
+
+
+{% block body %}
+    <h1>Reparaciones</h1>
+
+
+    <table class = "text-center table table-bordered">
+       <thead>
+           <tr>
+               <th>
+                   ID
+               </th>
+               <th>
+                   USUARIO
+               </th>
+               <th>
+                   EMPLEADO
+               </th>
+               <th>
+                   PROBLEMA
+               </th>
+               <th>
+                   COMENTARIO
+               </th>
+               <th>
+                   ESTADO
+               </th>
+               <th>
+                   FECHA INICIO
+               </th>
+               <th>
+                   FECHA FIN
+               </th>
+               <th>
+                   PRECIO
+               </th>
+           </tr>
+       </thead>
+        <tbody>
+        {% for reparacion in reparaciones %}
+            <tr>
+            <td>{{ reparacion.idreparacion }}</td>
+            <td>{{ reparacion.idusuario }}</td>
+            <td>{{ reparacion.idempleado }}</td>
+            <td>{{ reparacion.problema }}</td>
+            <td>{{ reparacion.comentarioReparacion }}</td>
+            <td>{{ reparacion.idestadoreparacion }}</td>
+            <td>{{ reparacion.fechaInicio|date('Y-m-d') }}</td>
+            <td>{{ reparacion.fechaFin|date('Y-m-d') }}</td>
+            <td>{{ reparacion.precio }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

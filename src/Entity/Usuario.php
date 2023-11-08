@@ -170,7 +170,10 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     }
 
-    
+    function __toString()
+    {
+        return $this->nombre;
+    }
 
     /**
      * Get the value of idusuario

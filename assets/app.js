@@ -48,6 +48,7 @@ jQuery(window).on('load', function() {
 
     jQuery('.btnAddPlataforma').on('click', function() {
 
+
         let plataforma = jQuery('.plataformaPlantilla').last().clone();
         cantPlataformas++;
 
@@ -77,12 +78,9 @@ jQuery(window).on('load', function() {
     });
 
     jQuery('.btnAddEtiqueta').on('click', function () {
+
         let etiqueta = jQuery('.etiquetaPlantilla').last().clone();
         cantEtiqueta++;
-
-        etiqueta.find('br').remove();
-
-        etiqueta.prepend('</br>');
 
         addRemoveButton(etiqueta);
 
@@ -102,5 +100,10 @@ jQuery(window).on('load', function() {
                 cantEtiqueta--;
             });
         }
+    });
+
+    jQuery('.btnRemoveEtiqueta').on('click', function() {
+        jQuery(this).parent().parent().remove();
+        cantEtiqueta--;
     });
 });
