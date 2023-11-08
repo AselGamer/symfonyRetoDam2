@@ -153,7 +153,7 @@
                                     <div class="etiquetaPlantillaInner">
                                         <select name="etiquetas[]" class="form-select" >
                                         {% for etiqueta in etiquetas %}
-                                            {% if etiquetaExtra.idVideojuego.idVideojuego == datosExtra.idVideojuego %}
+                                            {% if etiquetaExtra.idEtiqueta.idEtiqueta == etiqueta.idEtiqueta %}
                                                 <option value="{{ etiqueta.idEtiqueta }}" selected>{{ etiqueta.nombre }}</option>
                                                 {% else %}
                                                 <option value="{{ etiqueta.idEtiqueta }}">{{ etiqueta.nombre }}</option>

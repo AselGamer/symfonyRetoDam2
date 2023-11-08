@@ -308,6 +308,19 @@ class ArticuloController extends AbstractController
                 case 'Videojuego':
                     $articuloTipo = $this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idarticulo' => $id));
                     empty($_POST['plataforma']) ? : $articuloTipo->setIdplataforma($this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataforma'])));
+                    $this->entityManager->getRepository(Etiquetavideojuego::class)->removeByVideojuego($articuloTipo->getIdvideojuego());
+                    for ($i=0; $i < sizeof($_POST['etiquetas']); $i++) { 
+                        $etiquetavideojuego = new Etiquetavideojuego();
+                        $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findOneBy(array('idetiqueta' => $_POST['etiquetas'][$i]));
+                        $etiquetavideojuego->setIdetiqueta($etiqueta);
+                        $etiquetavideojuego->setIdvideojuego($articuloTipo);
+                        if (is_null($etiqueta)) {
+                            return $this->redirectToRoute('app_articulo');
+                        } else {
+                            $this->entityManager->persist($etiquetavideojuego);
+                            $this->entityManager->flush();
+                        }
+                    }
                     break;
                 default:
                     # code...
