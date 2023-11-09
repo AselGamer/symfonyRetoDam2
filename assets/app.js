@@ -14,6 +14,7 @@ jQuery(window).on('load', function() {
 
     let cantPlataformas = 1;
     let cantEtiqueta = 1;
+    let estadoCarga = 0;
 
     showFields(jQuery('#tipo').val());
 
@@ -106,4 +107,47 @@ jQuery(window).on('load', function() {
         jQuery(this).parent().parent().remove();
         cantEtiqueta--;
     });
+
+
+    jQuery('#estado').on('change', function() {
+        estado = jQuery(this).val();
+        if (estado == 2) {
+            jQuery('.modal-body').find('p').text('Al cambiar el estado a "Activo" te haces responsable de la reparación del dispositivo.');
+            jQuery('.modal').show();
+        } else if (estado == 3) {
+            jQuery('.modal-body').find('p').text('Al cambiar el estado a "Finalizado" no se podra volver a editar y el dispositivo se le devolvera al cliente en el estado actual.');
+            jQuery('.modal').show();
+        } else if (estado == 1) {
+            jQuery('.modal-body').find('p').text('Al cambiar el estado a "Enviado" se eliminaran los datos de la reparacion incluiendo el empleado que esta realizando la misma.');
+            jQuery('.modal').show();
+        }
+        estadoCarga = estado;
+        cambiarEstado();
+    }
+    );
+
+    jQuery('.closeModal').on('click', function() {
+        jQuery('.modal').hide();
+    });
+
+    estadoCarga = jQuery('#estado').val();
+
+    cambiarEstado();
+
+    function cambiarEstado() {
+        switch (estadoCarga) {
+            case '1' || 1:
+                jQuery('.activo').hide();
+                jQuery('.finalizado').hide();
+                break;
+            case '2' || 2:
+                jQuery('.finalizado').hide();
+                jQuery('.activo').show();
+                break;
+            case '3' || 3:
+                jQuery('.activo').show();
+                jQuery('.finalizado').show();
+                break;
+        }
+    }
 });

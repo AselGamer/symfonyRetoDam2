@@ -39,6 +39,9 @@
                <th>
                    PRECIO
                </th>
+               <th>
+                   CAMBIAR ESTADO
+               </th>
            </tr>
        </thead>
         <tbody>
@@ -46,13 +49,34 @@
             <tr>
             <td>{{ reparacion.idreparacion }}</td>
             <td>{{ reparacion.idusuario }}</td>
-            <td>{{ reparacion.idempleado }}</td>
+            {% if reparacion.idempleado == null %}
+                <td class="text-danger">Sin empleado</td>
+            {% else %}
+                <td>{{ reparacion.idempleado }}</td>
+            {% endif %}
             <td>{{ reparacion.problema }}</td>
-            <td>{{ reparacion.comentarioReparacion }}</td>
+            {% if reparacion.comentarioReparacion == null %}
+                <td class="text-danger">Sin comentario</td>
+            {% else %}
+                <td>{{ reparacion.comentarioReparacion }}</td>
+            {% endif %}
             <td>{{ reparacion.idestadoreparacion }}</td>
-            <td>{{ reparacion.fechaInicio|date('Y-m-d') }}</td>
-            <td>{{ reparacion.fechaFin|date('Y-m-d') }}</td>
-            <td>{{ reparacion.precio }}</td>
+            {% if reparacion.fechaInicio == null %}
+                <td class="text-danger">Sin fecha</td>
+            {% else %}
+                <td>{{ reparacion.fechaInicio|date('Y-m-d') }}</td>
+            {% endif %}
+            {% if reparacion.fechaFin == null %}
+                <td class="text-danger">Sin fecha</td>
+            {% else %}
+                <td>{{ reparacion.fechaFin|date('Y-m-d') }}</td>
+            {% endif %}
+            {% if reparacion.precio == null %}
+                <td class="text-danger">Sin precio</td>
+            {% else %}
+                <td>{{ reparacion.precio }}</td>
+            {% endif %}
+            <td><div id="tdEditar"><a href="{{ path('app_reparacion_estado', { 'id': reparacion.idreparacion }) }}"><button class="btn btn-lg btn-primary float-start">Cambiar estado</button></a></div></td>
             </tr>
         {% endfor %}
         </tbody>

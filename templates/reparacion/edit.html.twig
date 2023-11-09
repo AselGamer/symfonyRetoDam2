@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cambiar Estado de Reparacion{% endblock %}
+
+{% block body %}
+
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Atencion!</h5>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary closeModal" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+    <div class="row">
+        <div class="login-form bg-light mt-4 p-4">
+            <form method="post" class="row g-3" action="{{ path('app_reparacion_estado', {'id': reparacion.idReparacion}) }}" enctype='multipart/form-data'>
+                <h1 class="h3 mb-3 font-weight-normal">Cambiar Estado</h1>
+                <div class="col-12">
+                    <label for="estado">Estado</label>
+                    {% if reparacion.idEstadoreparacion.nombre == "Finalizado" %}
+                        <select class="form-select" name="estado" id="estado" required disabled>    
+                    {% else %}
+                        <select class="form-select" name="estado" id="estado" required>
+                    {% endif %}
+                        {% for estado in estados %}
+                            {% if estado.idEstadoreparacion == reparacion.idEstadoReparacion.idEstadoReparacion %}
+                                <option value="{{ estado.idEstadoreparacion }}" selected>{{ estado.nombre }}</option>
+                            {% else %}
+                                <option value="{{ estado.idEstadoreparacion }}">{{ estado.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12 activo finalizado">
+                    <label for="fecha_inicio">Fecha Inicio</label>
+                    <input class="form-control" name="fecha_inicio" type="date" value="{{ reparacion.fechaInicio|date('Y-m-d') }}"></input>
+                </div>
+
+                <div class="col-12 finalizado">
+                    <label for="fecha_fin">Fecha Fin</label>
+                    <input class="form-control" name="fecha_fin" type="date" value="{{ reparacion.fechaFin|date('Y-m-d') }}"></input>
+                </div>
+
+                <div class="col-12 activo finalizado">
+                    <label for="comentario_reparacion">Comentario Reparacion</label>
+                    <textarea class="form-control" name="comentario_reparacion" id="comentario_reparacion" cols="30" rows="10">{{ reparacion.comentarioReparacion }}</textarea>
+                </div>
+
+                <div class="col-12 finalizado">
+                    <label for="precio">Precio</label>
+                    <input type="number" class="form-control" name="precio" id="precio" value="{{ reparacion.precio }}"></input>
+                </div>
+                
+                <div class="col-12">
+                <br>
+                    <button class="btn btn-lg btn-primary float-end" type="submit">
+                        Cambiar Estado
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}

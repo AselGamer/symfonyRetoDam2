@@ -415,7 +415,7 @@ CREATE TABLE `Reparacion` (
   CONSTRAINT `ReparacionEmpleado` FOREIGN KEY (`idEmpleado`) REFERENCES `Empleado` (`idEmpleado`),
   CONSTRAINT `ReparacionEstadoReparacion` FOREIGN KEY (`idEstadoReparacion`) REFERENCES `EstadoReparacion` (`idEstadoReparacion`),
   CONSTRAINT `ReparacionUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `Usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,7 +424,7 @@ CREATE TABLE `Reparacion` (
 
 LOCK TABLES `Reparacion` WRITE;
 /*!40000 ALTER TABLE `Reparacion` DISABLE KEYS */;
-INSERT INTO `Reparacion` VALUES (1,1,4,'Broken part','Replaced the damaged component',3,'2023-11-08','2023-11-10',150);
+INSERT INTO `Reparacion` VALUES (1,1,4,'Broken part','Replaced the damaged component',3,'2023-11-08','2023-11-10',150),(2,1,NULL,'Scratched disk',NULL,1,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `Reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -478,6 +478,7 @@ CREATE TABLE `Usuario` (
   `provincia` varchar(30) DEFAULT NULL,
   `pais` varchar(30) DEFAULT NULL,
   `roles` json DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idUsuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -488,7 +489,7 @@ CREATE TABLE `Usuario` (
 
 LOCK TABLES `Usuario` WRITE;
 /*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-INSERT INTO `Usuario` VALUES (1,'example@email.com','John','$2y$13$B2Br2DF8RwHQZ5Oi7T9Wb.phN/jz8qJG5/haTXHzveeYXxBCfwYxW','Doe','Smith','1234567890','123 Main Street',NULL,'2',NULL,'Example City','Example State','Example Country',NULL);
+INSERT INTO `Usuario` VALUES (1,'example@email.com','John','$2y$13$B2Br2DF8RwHQZ5Oi7T9Wb.phN/jz8qJG5/haTXHzveeYXxBCfwYxW','Doe','Smith','1234567890','123 Main Street',NULL,'2',NULL,'Example City','Example State','Example Country',NULL,NULL);
 /*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -548,4 +549,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-08 13:55:29
+-- Dump completed on 2023-11-09 11:38:30

@@ -124,7 +124,7 @@ class Reparacion
     /**
      * Get the value of comentarioReparacion
      */
-    public function getComentarioReparacion(): string
+    public function getComentarioReparacion(): ?string
     {
         return $this->comentarioReparacion;
     }
@@ -132,7 +132,7 @@ class Reparacion
     /**
      * Set the value of comentarioReparacion
      */
-    public function setComentarioReparacion(string $comentarioReparacion)
+    public function setComentarioReparacion(?string $comentarioReparacion)
     {
         $this->comentarioReparacion = $comentarioReparacion;
     }
@@ -140,7 +140,7 @@ class Reparacion
     /**
      * Get the value of fechaInicio
      */
-    public function getFechaInicio(): DateTime
+    public function getFechaInicio(): ?DateTime
     {
         return $this->fechaInicio;
     }
@@ -148,7 +148,7 @@ class Reparacion
     /**
      * Set the value of fechaInicio
      */
-    public function setFechaInicio(DateTime $fechaInicio)
+    public function setFechaInicio(?DateTime $fechaInicio)
     {
         $this->fechaInicio = $fechaInicio;
     }
@@ -164,7 +164,7 @@ class Reparacion
     /**
      * Set the value of fechaFin
      */
-    public function setFechaFin(DateTime $fechaFin)
+    public function setFechaFin(?DateTime $fechaFin)
     {
         $this->fechaFin = $fechaFin;
     }
@@ -172,7 +172,7 @@ class Reparacion
     /**
      * Get the value of precio
      */
-    public function getPrecio(): float
+    public function getPrecio(): ?float
     {
         return $this->precio;
     }
@@ -220,7 +220,7 @@ class Reparacion
     /**
      * Get the value of idempleado
      */
-    public function getIdempleado(): Empleado
+    public function getIdempleado(): ?Empleado
     {
         return $this->idempleado;
     }
@@ -228,7 +228,7 @@ class Reparacion
     /**
      * Set the value of idempleado
      */
-    public function setIdempleado(Empleado $idempleado)
+    public function setIdempleado(?Empleado $idempleado)
     {
         $this->idempleado = $idempleado;
     }

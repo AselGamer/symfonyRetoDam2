@@ -114,6 +114,13 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $pais;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="foto", type="string", length=255, nullable=true)
+     */
+    private $foto;
+
     /*
     * @ORM\Column(type= "json")
     */
@@ -407,5 +414,21 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pais = $pais;
 
         return $this;
+    }
+
+    /**
+     * Get the value of foto
+     */
+    public function getFoto(): ?string
+    {
+        return $this->foto;
+    }
+
+    /**
+     * Set the value of foto
+     */
+    public function setFoto(?string $foto)
+    {
+        $this->foto = $foto;
     }
 }
