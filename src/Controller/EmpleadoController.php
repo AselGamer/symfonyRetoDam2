@@ -111,4 +111,30 @@ class EmpleadoController extends AbstractController
             'error' => null
         ]);
     }
+
+    #[Route('/logout', name: 'app_empleado_logout')]
+    public function logout(): Response
+    {
+        session_destroy();
+        return $this->redirect('login');
+    }
+
+    #[Route('/empleado/list', name: 'app_empleado_list')]
+    public function empleadoList(): Response
+    {
+        if (is_null($this->security->getUser())) {
+            return $this->redirect('login');
+        } else {
+            /** @var Empleado $empleado */
+            $empleado = $this->security->getUser();
+            if ($empleado->isGerente() == false) {
+                return $this->redirect('login');
+            }
+        }
+
+        $empleados = $this->entityManager->getRepository(Empleado::class)->findAll();
+        $parametros['empleados'] = $empleados;
+
+        return $this->render('empleado/list.html.twig', $parametros);
+    }
 }

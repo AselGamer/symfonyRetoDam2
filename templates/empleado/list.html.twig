@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Empleado{% endblock %}
+
+
+
+{% block body %}
+    <h1>Empleados</h1>
+
+
+    <table class = "text-center table table-bordered">
+       <thead>
+           <tr>
+               <th>
+                   ID
+               </th>
+               <th>
+                   NOMBRE
+               </th>
+               <th>
+                   APELLIDO 1
+               </th>
+               <th>
+                   APELLIDO 2
+               </th>
+               <th>
+                   ES GERENTE
+               </th>
+               <th>
+                   EMAIL
+               </th>
+           </tr>
+       </thead>
+        <tbody>
+        {% for empleado in empleados %}
+        <tr>
+            <td>{{ empleado.idEmpleado }}</td>
+            <td>{{ empleado.nombre }}</td>
+            <td>{{ empleado.apellido1 }}</td>
+            <td>{{ empleado.apellido2 }}</td>
+            {% if empleado.gerente == 1 %}
+                <td>Si</td>
+            {% else %}
+                <td>No</td>
+            {% endif %}
+            <td>{{ empleado.email }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <a href="{{ path('app_empleado_register') }}" >
+            <button class="btn btn-lg btn-primary float-start">Registrar Empleado</button>
+        </a>
+
+{% endblock %}

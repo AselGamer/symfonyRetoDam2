@@ -1,20 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmpleadoController!{% endblock %}
+{% block title %}JuegAlmi{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/almi/proyectos/symfonyRetoDam2/src/Controller/EmpleadoController.php'|file_link(0) }}">src/Controller/EmpleadoController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/almi/proyectos/symfonyRetoDam2/templates/empleado/index.html.twig'|file_link(0) }}">templates/empleado/index.html.twig</a></code></li>
-    </ul>
+<div class="header">
+    <h1>¡Bienvenido a JuegAlmi!</h1>
 </div>
+
+<div class="body">
+    <h2>Paginas de Administracion</h2>
+    <div class="linkContainer">
+        <div class="leftDiv">
+            <h3>Administracion</h3>
+            <ul>
+                 <li><a href="{{ path('app_articulo') }}">Articulos</a></li>
+                <li><a href="{{ path('app_etiqueta') }}">Etiquetas</a></li>
+                <li><a href="{{ path('app_marca') }}">Marcas</a></li>
+                <li><a href="{{ path('app_plataforma') }}">Plataformas</a></li>
+                <li><a href="{{ path('app_reparacion') }}">Reparaciones</a></li>
+            </ul>
+        </div>
+        <div class="rightDiv">
+            <h3>Empleados</h3>
+            <li><a href="{{ path('app_empleado_list') }}">Empleados</a></li>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
