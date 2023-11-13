@@ -73,7 +73,7 @@ class UsuarioController extends AbstractController
     #[Route('/', name: 'app_usuario')]
     public function redirectToLogin(): Response
     {
-        return $this->redirect('/login',200);;
+        return $this->redirect('/login',301);
     }
 
 

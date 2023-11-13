@@ -54,6 +54,8 @@ class ArticuloController extends AbstractController
         return $this->render('articulos/index.html.twig', $parametros);
     }
 
+
+
     #[Route('/articulos/add', name: 'app_articulo_add', methods:['GET', 'POST'])]
     public function addArticulos(Request $request, SluggerInterface $sluggerInterface): Response
     {
@@ -400,6 +402,41 @@ class ArticuloController extends AbstractController
         $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticulo($tipoArticulo, $busqueda);
 
         return $this->convertToJson($articulos);   
+    }
+
+    #[Route('/api/articulos/ver/{id}', name: 'app_articulo_ver')]
+    public function verArticulo(int $id): JsonResponse
+    {
+        $articulo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(['idarticulo'=>$id]);
+
+        $datos = array();
+
+        switch ($articulo->getTipoarticulo()) {
+            case 'Consola':
+                array_push($datos, $this->entityManager->getRepository(Consola::class)->findOneBy(['idarticulo'=>$id]));
+                $plataformas = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(['idconsola'=>$datos[0]->getIdconsola()]);
+                foreach ($plataformas as $plataforma) {
+                    array_push($datos, $plataforma->getIdplataforma());
+                }
+                break;
+            
+            case 'DispositivoMovil':
+                array_push($datos, $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(['idarticulo'=>$id]));
+                break;
+            
+            case 'Videojuego':
+                array_push($datos, $this->entityManager->getRepository(Videojuego::class)->findOneBy(['idarticulo'=>$id]));
+                $etiqueta = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(['idvideojuego'=>$datos[0]->getIdvideojuego()]);
+                foreach ($etiqueta as $etiqueta) {
+                    array_push($datos, $etiqueta->getIdetiqueta());
+                }
+                break;
+            default:
+                return new JsonResponse(['data' => 'No existe el articulo'], JsonResponse::HTTP_NOT_FOUND);
+                break;
+        }
+
+        return $this->convertToJson($datos);
     }
 
 
