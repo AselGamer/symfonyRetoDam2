@@ -107,7 +107,7 @@ CREATE TABLE `Compra` (
   PRIMARY KEY (`idCompra`),
   KEY `TransaccionCompra` (`idTransaccion`),
   CONSTRAINT `TransaccionCompra` FOREIGN KEY (`idTransaccion`) REFERENCES `Transaccion` (`idTransaccion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,6 +116,7 @@ CREATE TABLE `Compra` (
 
 LOCK TABLES `Compra` WRITE;
 /*!40000 ALTER TABLE `Compra` DISABLE KEYS */;
+INSERT INTO `Compra` VALUES (1,1,'2023-11-13');
 /*!40000 ALTER TABLE `Compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +166,7 @@ CREATE TABLE `DetalleTransaccion` (
   KEY `DetalleTransaccion` (`idTransaccion`),
   CONSTRAINT `DetalleArticulo` FOREIGN KEY (`idArticulo`) REFERENCES `Articulo` (`idArticulo`),
   CONSTRAINT `DetalleTransaccion` FOREIGN KEY (`idTransaccion`) REFERENCES `Transaccion` (`idTransaccion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,6 +175,7 @@ CREATE TABLE `DetalleTransaccion` (
 
 LOCK TABLES `DetalleTransaccion` WRITE;
 /*!40000 ALTER TABLE `DetalleTransaccion` DISABLE KEYS */;
+INSERT INTO `DetalleTransaccion` VALUES (1,8,1,500);
 /*!40000 ALTER TABLE `DetalleTransaccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -424,7 +426,7 @@ CREATE TABLE `Reparacion` (
 
 LOCK TABLES `Reparacion` WRITE;
 /*!40000 ALTER TABLE `Reparacion` DISABLE KEYS */;
-INSERT INTO `Reparacion` VALUES (1,1,4,'Broken part','Replaced the damaged component',3,'2023-11-08','2023-11-10',150),(2,1,NULL,'Scratched disk',NULL,1,NULL,NULL,NULL);
+INSERT INTO `Reparacion` VALUES (1,1,4,'Broken part','Replaced the damaged component',3,'2023-11-08','2023-11-10',150),(2,1,4,'Scratched disk','Reparacion Empezada',2,'2023-11-10',NULL,NULL);
 /*!40000 ALTER TABLE `Reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -443,7 +445,7 @@ CREATE TABLE `Transaccion` (
   PRIMARY KEY (`idTransaccion`),
   KEY `idUsuario` (`idUsuario`),
   CONSTRAINT `idUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `Usuario` (`idUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -452,8 +454,26 @@ CREATE TABLE `Transaccion` (
 
 LOCK TABLES `Transaccion` WRITE;
 /*!40000 ALTER TABLE `Transaccion` DISABLE KEYS */;
+INSERT INTO `Transaccion` VALUES (1,1,'20','30');
 /*!40000 ALTER TABLE `Transaccion` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `TransaccionTypeView`
+--
+
+DROP TABLE IF EXISTS `TransaccionTypeView`;
+/*!50001 DROP VIEW IF EXISTS `TransaccionTypeView`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `TransaccionTypeView` AS SELECT 
+ 1 AS `idTransaccion`,
+ 1 AS `idUsuario`,
+ 1 AS `latitud`,
+ 1 AS `longitud`,
+ 1 AS `TipoTransaccion`,
+ 1 AS `idTipoTransaccion`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `Usuario`
@@ -539,6 +559,24 @@ UNLOCK TABLES;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `TransaccionTypeView`
+--
+
+/*!50001 DROP VIEW IF EXISTS `TransaccionTypeView`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`almi`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `TransaccionTypeView` AS select `t`.`idTransaccion` AS `idTransaccion`,`t`.`idUsuario` AS `idUsuario`,`t`.`latitud` AS `latitud`,`t`.`longitud` AS `longitud`,((case when (`c`.`idCompra` is not null) then 'Compra' when (`a`.`idAlquiler` is not null) then 'Alquiler' else 'Unknown' end) collate utf8mb4_0900_ai_ci) AS `TipoTransaccion`,(case when (`c`.`idCompra` is not null) then `c`.`idCompra` when (`a`.`idAlquiler` is not null) then `a`.`idAlquiler` else NULL end) AS `idTipoTransaccion` from ((`Transaccion` `t` left join `Compra` `c` on((`t`.`idTransaccion` = `c`.`idTransaccion`))) left join `Alquiler` `a` on((`t`.`idTransaccion` = `a`.`idTransaccion`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -549,4 +587,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-09 11:38:30
+-- Dump completed on 2023-11-13 12:07:06

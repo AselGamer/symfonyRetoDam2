@@ -21,6 +21,35 @@ class VistaEntityRepository extends ServiceEntityRepository
         parent::__construct($registry, VistaEntity::class);
     }
 
+    public function find3TypeStartingBy(string $type, int $offset)
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT a
+        FROM App\Entity\VistaEntity a
+        WHERE a.tipoarticulo = :tipo")->setParameter('tipo', $type)->setMaxResults(3)->setFirstResult($offset);
+
+        return $query->getResult();
+    }
+
+    public function findByType(string $type)
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT a
+        FROM App\Entity\VistaEntity a
+        WHERE a.tipoarticulo = :tipo")->setParameter('tipo', $type);
+
+        return $query->getResult();
+    }
+
+    public function searchArticulo(string $type, string $search)
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT a
+        FROM App\Entity\VistaEntity a
+        WHERE a.tipoarticulo = :tipo AND a.articulonombre LIKE :search")->setParameter('tipo', $type)->setParameter('search', '%'.$search.'%');
+
+        return $query->getResult();
+    }
+
+
+
     /*
     public function findConsolasWithPlataformas()
     {

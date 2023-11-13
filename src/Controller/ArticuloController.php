@@ -48,6 +48,7 @@ class ArticuloController extends AbstractController
 
         $articulos = $this->entityManager->getRepository(VistaEntity::class)->findAll();
 
+
         $parametros['articulos'] = $articulos;
 
         return $this->render('articulos/index.html.twig', $parametros);
@@ -372,8 +373,35 @@ class ArticuloController extends AbstractController
     {
         $articulos = $this->entityManager->getRepository(VistaEntity::class)->findAll();
 
+        //$articulos = $this->entityManager->getRepository(VistaEntity::class)->find3TypeStartingBy('Consola', $offset);
+
         return $this->convertToJson($articulos);   
     }
+
+
+    #[Route('/api/articulos/{tipo}', name: 'app_articulo_api_tipo', methods:['GET'])]
+    public function ArticulosTipo(string $tipo): Response
+    {
+        $articulos = $this->entityManager->getRepository(VistaEntity::class)->findByType($tipo);
+
+        return $this->convertToJson($articulos);   
+    }
+
+    
+    #[Route('/api/articulos/buscar', name: 'app_articulo_api_buscar', methods:['POST'])]
+    public function ArticulosBuscar(Request $request): Response
+    {
+        $datos = json_decode($request->getContent(), true);
+
+        $tipoArticulo = $datos['tipoArticulo'];
+
+        $busqueda = $datos['busqueda'];
+
+        $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticulo($tipoArticulo, $busqueda);
+
+        return $this->convertToJson($articulos);   
+    }
+
 
     private function convertToJson($object): JsonResponse
     {

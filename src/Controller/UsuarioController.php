@@ -69,6 +69,38 @@ class UsuarioController extends AbstractController
         }
     }
 
+
+    #[Route('/', name: 'app_usuario')]
+    public function redirectToLogin(): Response
+    {
+        return $this->redirect('/login',200);;
+    }
+
+
+    #[Route('/api/usuario/data', name: 'app_usuario_datos')]
+    public function myUsuario(): JsonResponse
+    {
+        /** @var Usuario $usuario */
+        $usuario = $this->getUser();
+
+        $datos['idusuario'] = $usuario->getIdusuario();
+        $datos['nombre'] = $usuario->getNombre();
+        $datos['apellido1'] = $usuario->getApellido1();
+        $datos['apellido2'] = $usuario->getApellido2();
+        $datos['email'] = $usuario->getEmail();
+        $datos['telefono'] = $usuario->getTelefono();
+        $datos['calle'] = $usuario->getCalle();
+        $datos['numPortal'] = $usuario->getNumPortal();
+        $datos['piso'] = $usuario->getPiso();
+        $datos['codigoPostal'] = $usuario->getCodigoPostal();
+        $datos['ciudad'] = $usuario->getCiudad();
+        $datos['pais'] = $usuario->getPais();
+        $datos['provincia'] = $usuario->getProvincia();
+
+        
+        return $this->convertToJsonResponse($datos);
+    }
+
     
 
     private function convertToJsonResponse($object):JsonResponse

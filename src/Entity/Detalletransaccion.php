@@ -29,7 +29,7 @@ class Detalletransaccion
     private $precioTotal;
 
     /**
-     * @var \Transaccion
+     * @var Transaccion
      *
      * @ORM\ManyToOne(targetEntity="Transaccion")
      * @ORM\JoinColumns({
@@ -39,7 +39,7 @@ class Detalletransaccion
     private $idtransaccion;
 
     /**
-     * @var \Articulo
+     * @var Articulo
      *
      * @ORM\ManyToOne(targetEntity="Articulo")
      * @ORM\JoinColumns({
@@ -49,4 +49,68 @@ class Detalletransaccion
     private $idarticulo;
 
 
+
+    /**
+     * Get the value of iddetalletransaccion
+     */
+    public function getIddetalletransaccion(): int
+    {
+        return $this->iddetalletransaccion;
+    }
+
+    /**
+     * Set the value of iddetalletransaccion
+     */
+    public function setIddetalletransaccion(int $iddetalletransaccion)
+    {
+        $this->iddetalletransaccion = $iddetalletransaccion;
+    }
+
+    /**
+     * Get the value of precioTotal
+     */
+    public function getPrecioTotal(): float
+    {
+        return $this->precioTotal;
+    }
+
+    /**
+     * Set the value of precioTotal
+     */
+    public function setPrecioTotal(float $precioTotal)
+    {
+        $this->precioTotal = $precioTotal;
+    }
+
+    /**
+     * Get the value of idtransaccion
+     */
+    public function getIdtransaccion(): Transaccion
+    {
+        return $this->idtransaccion;
+    }
+
+    /**
+     * Set the value of idtransaccion
+     */
+    public function setIdtransaccion(Transaccion $idtransaccion)
+    {
+        $this->idtransaccion = $idtransaccion;
+    }
+
+    /**
+     * Get the value of idarticulo
+     */
+    public function getIdarticulo(): Articulo
+    {
+        return $this->idarticulo;
+    }
+
+    /**
+     * Set the value of idarticulo
+     */
+    public function setIdarticulo(Articulo $idarticulo)
+    {
+        $this->idarticulo = $idarticulo;
+    }
 }

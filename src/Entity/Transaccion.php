@@ -36,7 +36,7 @@ class Transaccion
     private $longitud;
 
     /**
-     * @var \Usuario
+     * @var Usuario
      *
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumns({
@@ -46,4 +46,68 @@ class Transaccion
     private $idusuario;
 
 
+
+    /**
+     * Get the value of idtransaccion
+     */
+    public function getIdtransaccion(): int
+    {
+        return $this->idtransaccion;
+    }
+
+    /**
+     * Set the value of idtransaccion
+     */
+    public function setIdtransaccion(int $idtransaccion)
+    {
+        $this->idtransaccion = $idtransaccion;
+    }
+
+    /**
+     * Get the value of latitud
+     */
+    public function getLatitud(): string
+    {
+        return $this->latitud;
+    }
+
+    /**
+     * Set the value of latitud
+     */
+    public function setLatitud(string $latitud)
+    {
+        $this->latitud = $latitud;
+    }
+
+    /**
+     * Get the value of longitud
+     */
+    public function getLongitud(): string
+    {
+        return $this->longitud;
+    }
+
+    /**
+     * Set the value of longitud
+     */
+    public function setLongitud(string $longitud)
+    {
+        $this->longitud = $longitud;
+    }
+
+    /**
+     * Get the value of idusuario
+     */
+    public function getIdusuario(): Usuario
+    {
+        return $this->idusuario;
+    }
+
+    /**
+     * Set the value of idusuario
+     */
+    public function setIdusuario(Usuario $idusuario)
+    {
+        $this->idusuario = $idusuario;
+    }
 }

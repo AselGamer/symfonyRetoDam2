@@ -19,7 +19,7 @@ security:
                 property: email
     firewalls:
         login:
-            pattern: ^/api
+            pattern: ^/api/login
             stateless: false
             provider: usuarios
             json_login:
@@ -51,6 +51,10 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/register,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/articulos,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/plataformas,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/marcas,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/etiquetas,       roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
