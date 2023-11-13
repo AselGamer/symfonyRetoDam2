@@ -27,12 +27,12 @@ CREATE TABLE `Alquiler` (
   `idTransaccion` int NOT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
-  `fecha_devolucion` float DEFAULT NULL,
+  `fecha_devolucion` date NOT NULL,
   `precio` float NOT NULL,
   PRIMARY KEY (`idAlquiler`),
   KEY `TransaccionAlquiler` (`idTransaccion`),
   CONSTRAINT `TransaccionAlquiler` FOREIGN KEY (`idTransaccion`) REFERENCES `Transaccion` (`idTransaccion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +41,7 @@ CREATE TABLE `Alquiler` (
 
 LOCK TABLES `Alquiler` WRITE;
 /*!40000 ALTER TABLE `Alquiler` DISABLE KEYS */;
+INSERT INTO `Alquiler` VALUES (1,9,'2023-11-13','2023-11-15','2023-11-15',30);
 /*!40000 ALTER TABLE `Alquiler` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,7 +108,7 @@ CREATE TABLE `Compra` (
   PRIMARY KEY (`idCompra`),
   KEY `TransaccionCompra` (`idTransaccion`),
   CONSTRAINT `TransaccionCompra` FOREIGN KEY (`idTransaccion`) REFERENCES `Transaccion` (`idTransaccion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,7 +117,7 @@ CREATE TABLE `Compra` (
 
 LOCK TABLES `Compra` WRITE;
 /*!40000 ALTER TABLE `Compra` DISABLE KEYS */;
-INSERT INTO `Compra` VALUES (1,1,'2023-11-13');
+INSERT INTO `Compra` VALUES (1,1,'2023-11-13'),(2,10,'2023-11-13');
 /*!40000 ALTER TABLE `Compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,7 +167,7 @@ CREATE TABLE `DetalleTransaccion` (
   KEY `DetalleTransaccion` (`idTransaccion`),
   CONSTRAINT `DetalleArticulo` FOREIGN KEY (`idArticulo`) REFERENCES `Articulo` (`idArticulo`),
   CONSTRAINT `DetalleTransaccion` FOREIGN KEY (`idTransaccion`) REFERENCES `Transaccion` (`idTransaccion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +176,7 @@ CREATE TABLE `DetalleTransaccion` (
 
 LOCK TABLES `DetalleTransaccion` WRITE;
 /*!40000 ALTER TABLE `DetalleTransaccion` DISABLE KEYS */;
-INSERT INTO `DetalleTransaccion` VALUES (1,8,1,500);
+INSERT INTO `DetalleTransaccion` VALUES (1,8,1,500),(2,8,1,500),(3,27,9,0),(4,26,10,200);
 /*!40000 ALTER TABLE `DetalleTransaccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -445,7 +446,7 @@ CREATE TABLE `Transaccion` (
   PRIMARY KEY (`idTransaccion`),
   KEY `idUsuario` (`idUsuario`),
   CONSTRAINT `idUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `Usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +455,7 @@ CREATE TABLE `Transaccion` (
 
 LOCK TABLES `Transaccion` WRITE;
 /*!40000 ALTER TABLE `Transaccion` DISABLE KEYS */;
-INSERT INTO `Transaccion` VALUES (1,1,'20','30');
+INSERT INTO `Transaccion` VALUES (1,1,'20','30'),(9,1,'20','30'),(10,1,'20','30');
 /*!40000 ALTER TABLE `Transaccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -587,4 +588,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-13 12:07:06
+-- Dump completed on 2023-11-13 14:13:38
