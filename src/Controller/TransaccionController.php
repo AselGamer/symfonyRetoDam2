@@ -194,7 +194,21 @@ class TransaccionController extends AbstractController
         foreach ($datos['detalles'] as $detalle) {
             $detalleTransaccion = new Detalletransaccion();
             $detalleTransaccion->setIdtransaccion($transaccion);
-            $detalleTransaccion->setIdarticulo($this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo'=>$detalle['idproducto'])));
+            $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo'=>$detalle['idproducto']));
+            if ($articulo->getStock() < 1 && $datos['tipo_transaccion'] == 'Compra') {
+                return new JsonResponse(['data' => 'No hay stock suficiente'], JsonResponse::HTTP_BAD_REQUEST);
+            } else if($datos['tipo_transaccion'] == 'Compra' && $articulo->getStock() >= 1)
+            {
+                $articulo->setStock($articulo->getStock() - 1);
+            }
+
+            if ($articulo->getStockAlquiler() < 1 && $datos['tipo_transaccion'] == 'Alquiler') {
+                return new JsonResponse(['data' => 'No hay stock suficiente para alquilar'], JsonResponse::HTTP_BAD_REQUEST);
+            } else if($datos['tipo_transaccion'] == 'Alquiler' && $articulo->getStockAlquiler() >= 1)
+            {
+                $articulo->setStockAlquiler($articulo->getStockAlquiler() - 1);
+            }
+            $detalleTransaccion->setIdarticulo($articulo);
             $detalleTransaccion->setPrecioTotal($detalle['precio_total']);
             $this->entityManager->persist($detalleTransaccion);
         }

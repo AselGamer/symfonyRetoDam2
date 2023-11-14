@@ -66,6 +66,7 @@ class ArticuloController extends AbstractController
             empty($_POST['nombre']) ? $error = true : $articulo->setNombre($_POST['nombre']);
             empty($_POST['precio']) ? $error = true : $articulo->setPrecio($_POST['precio']);
             empty($_POST['stock']) ? $error = true : $articulo->setStock($_POST['stock']);
+            empty($_POST['stock_alquiler']) ? $error = true : $articulo->setStockalquiler($_POST['stock_alquiler']);
 
             if (empty($_FILES['foto']['name'])) {
                 $error = true;
@@ -260,6 +261,7 @@ class ArticuloController extends AbstractController
             empty($_POST['nombre']) ? : $articulo->setNombre($_POST['nombre']);
             empty($_POST['precio']) ? : $articulo->setPrecio($_POST['precio']);
             empty($_POST['stock']) ? : $articulo->setStock($_POST['stock']);
+            empty($_POST['stock_alquiler']) ? : $articulo->setStockalquiler($_POST['stock_alquiler']);
             if (empty($_FILES['foto']['name'])) {
                 
             } else {

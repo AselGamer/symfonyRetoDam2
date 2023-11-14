@@ -45,6 +45,13 @@ class Articulo
     private $stock;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="stock_alquiler", type="integer", nullable=true)
+     */
+    private $stockAlquiler;
+
+    /**
      * @var string|null
      *
      * @ORM\Column(name="foto", type="string", length=255, nullable=true)
@@ -171,5 +178,21 @@ class Articulo
         $this->idmarca = $idmarca;
 
         return $this;
+    }
+
+    /**
+     * Get the value of stockAlquiler
+     */
+    public function getStockAlquiler(): int
+    {
+        return $this->stockAlquiler;
+    }
+
+    /**
+     * Set the value of stockAlquiler
+     */
+    public function setStockAlquiler(int $stockAlquiler)
+    {
+        $this->stockAlquiler = $stockAlquiler;
     }
 }

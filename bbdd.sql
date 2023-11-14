@@ -59,6 +59,7 @@ CREATE TABLE `Articulo` (
   `precio` float DEFAULT NULL,
   `stock` int NOT NULL,
   `foto` varchar(255) DEFAULT NULL,
+  `stock_alquiler` int NOT NULL,
   PRIMARY KEY (`idArticulo`),
   KEY `MarcaArticulo` (`idMarca`),
   CONSTRAINT `MarcaArticulo` FOREIGN KEY (`idMarca`) REFERENCES `Marca` (`idMarca`)
@@ -71,7 +72,7 @@ CREATE TABLE `Articulo` (
 
 LOCK TABLES `Articulo` WRITE;
 /*!40000 ALTER TABLE `Articulo` DISABLE KEYS */;
-INSERT INTO `Articulo` VALUES (6,3,'Optimus Prime',1000000,1,'autobot1-6540e8e367ecb.png'),(8,1,'Playstation 5',500,200,'ps5-product-thumbnail-01-en-14sep21-6543657497f77.webp'),(9,4,'Nintendo Switch',300,200,'2560px-Nintendo-Switch-wJoyCons-BlRd-Standing-FL-1-654387dc9c9f2.png'),(26,1,'Playstation 4',200,300,'ps4-product-thumbnail-01-en-14sep21-1-6549fc06425bc.png'),(27,1,'Baldurs Gate 3',60,500,'baldurs-gay-6549fc46436e0.png');
+INSERT INTO `Articulo` VALUES (6,3,'Optimus Prime',1000000,1,'autobot1-6540e8e367ecb.png',0),(8,1,'Playstation 5',500,200,'ps5-product-thumbnail-01-en-14sep21-6543657497f77.webp',100),(9,4,'Nintendo Switch',300,200,'2560px-Nintendo-Switch-wJoyCons-BlRd-Standing-FL-1-654387dc9c9f2.png',50),(26,1,'Playstation 4',200,300,'ps4-product-thumbnail-01-en-14sep21-1-6549fc06425bc.png',20),(27,1,'Baldurs Gate 3',60,500,'baldurs-gay-6549fc46436e0.png',100);
 /*!40000 ALTER TABLE `Articulo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,7 +304,7 @@ CREATE TABLE `EtiquetaVideoJuego` (
   KEY `EtiquetaVideoJuegoVideoJuego` (`idVideojuego`),
   CONSTRAINT `EtiquetaVideoJuegoEtiqueta` FOREIGN KEY (`idEtiqueta`) REFERENCES `Etiqueta` (`idEtiqueta`),
   CONSTRAINT `EtiquetaVideoJuegoVideoJuego` FOREIGN KEY (`idVideojuego`) REFERENCES `VideoJuego` (`idVideojuego`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +313,7 @@ CREATE TABLE `EtiquetaVideoJuego` (
 
 LOCK TABLES `EtiquetaVideoJuego` WRITE;
 /*!40000 ALTER TABLE `EtiquetaVideoJuego` DISABLE KEYS */;
-INSERT INTO `EtiquetaVideoJuego` VALUES (30,2,10),(31,3,10);
+INSERT INTO `EtiquetaVideoJuego` VALUES (32,2,10),(33,3,10);
 /*!40000 ALTER TABLE `EtiquetaVideoJuego` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -380,7 +381,7 @@ CREATE TABLE `PlataformaConsola` (
   KEY `ConsolaPlataforma` (`idPlataforma`),
   CONSTRAINT `ConsolaPlataforma` FOREIGN KEY (`idPlataforma`) REFERENCES `Plataforma` (`idPlataforma`),
   CONSTRAINT `PlataformaConsola` FOREIGN KEY (`idConsola`) REFERENCES `Consola` (`idConsola`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -389,7 +390,7 @@ CREATE TABLE `PlataformaConsola` (
 
 LOCK TABLES `PlataformaConsola` WRITE;
 /*!40000 ALTER TABLE `PlataformaConsola` DISABLE KEYS */;
-INSERT INTO `PlataformaConsola` VALUES (23,3,4),(24,3,1),(37,4,2),(41,13,1);
+INSERT INTO `PlataformaConsola` VALUES (42,13,1),(43,3,4),(44,3,1),(45,4,2);
 /*!40000 ALTER TABLE `PlataformaConsola` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -588,4 +589,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-13 14:13:38
+-- Dump completed on 2023-11-14  8:25:12
