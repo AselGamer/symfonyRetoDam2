@@ -60,20 +60,20 @@ class ArticuloController extends AbstractController
     public function addArticulos(Request $request, SluggerInterface $sluggerInterface): Response
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $error = false;
+            $error = "";
             $nombreFoto = '';
             $articulo = new Articulo();
-            empty($_POST['nombre']) ? $error = true : $articulo->setNombre($_POST['nombre']);
-            empty($_POST['precio']) ? $error = true : $articulo->setPrecio($_POST['precio']);
-            empty($_POST['stock']) ? $error = true : $articulo->setStock($_POST['stock']);
-            empty($_POST['stock_alquiler']) ? $error = true : $articulo->setStockalquiler($_POST['stock_alquiler']);
-
+            empty($_POST['nombre']) ? $error .= "Nombre Invalido " : $articulo->setNombre($_POST['nombre']);
+            empty($_POST['precio']) || !is_numeric($_POST['precio']) ? $error .= "Precio Invalido " : $articulo->setPrecio($_POST['precio']);
+            !is_numeric($_POST['stock']) && $_POST['stock'] < 0 ? $error .= "Stock Invalido " : $articulo->setStock($_POST['stock']);
+            !is_numeric($_POST['stock_alquiler']) && $_POST['stock_alquiler'] < 0 ? $error .= "Stock Alquiler Invalido " : $articulo->setStockalquiler($_POST['stock_alquiler']);
+            
             if (empty($_FILES['foto']['name'])) {
-                $error = true;
+                $error .= "Foto Vacia";
             } else {
                 if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'webp') 
                 {
-                    $error = true;
+                    $error .= "Formato de foto invalido ";
                 } else
                 {
                     $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
@@ -89,24 +89,24 @@ class ArticuloController extends AbstractController
                         $articulo->setFoto($nombreFoto);
                         
                     } catch (FileException $e) {
-                        $error = true;
+                        $error .= "Fallo al subir la foto";
                     }
                 }
             }
-            empty($_POST['idMarca']) ? $error = true : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
+            empty($_POST['idMarca']) ? $error .= "Marca Invalida " : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
             switch ($_POST['tipo']) {
                 
                 case 'Consola':
-                    if (!$error) {
+                    if ($error == "") {
                         $this->entityManager->persist($articulo);
                         $this->entityManager->flush();
                         
                         $consola = new Consola();
                         $consola->setIdarticulo($articulo);
-                        empty($_POST['modelo']) ? $error = true : $consola->setModelo($_POST['modelo']);
-                        empty($_POST['cant_mandos']) ? $error = true : $consola->setCantmandos($_POST['cant_mandos']);
-                        empty($_POST['almacenamientoConsola']) ? $error = true : $consola->setAlmacenamiento($_POST['almacenamientoConsola']);
-                        if (!$error) {
+                        empty($_POST['modelo']) ? $error .= "Modelo Invalido " : $consola->setModelo($_POST['modelo']);
+                        empty($_POST['cant_mandos']) ? $error = "Cantidad de mando Invalidos " : $consola->setCantmandos($_POST['cant_mandos']);
+                        empty($_POST['almacenamientoConsola']) ? $error = "Almacenamiento Invalido " : $consola->setAlmacenamiento($_POST['almacenamientoConsola']);
+                        if ($error == "") {
                             $this->entityManager->persist($consola);
                             $this->entityManager->flush();
 
@@ -115,6 +115,10 @@ class ArticuloController extends AbstractController
                                 $paltaformaConsola->setIdconsola($consola);
                                 $paltaforma = $this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataformas'][$i]));
                                 if (is_null($paltaforma)) {
+                                    $this->addFlash(
+                                       'error',
+                                       $error
+                                    );
                                     return $this->redirectToRoute('app_articulo');
                                 } else {
                                     $paltaformaConsola->setIdplataforma($paltaforma);
@@ -131,21 +135,26 @@ class ArticuloController extends AbstractController
                             return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear la consola']);
                         }
                     } else {
+                        $this->addFlash(
+                           'error',
+                            $error
+                        );
+                        
                         return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
                     }
                     break;
                 case 'Dispositivo Movil':
-                    if (!$error) {
+                    if ($error == "") {
                         
                         $this->entityManager->persist($articulo);
                         $this->entityManager->flush();
                         
                         $dispMovil = new Dispositivomovil();
                         $dispMovil->setIdarticulo($articulo);
-                        empty($_POST['almacenamiento']) ? $error = true : $dispMovil->setAlmacenamiento($_POST['almacenamiento']);
-                        empty($_POST['ram']) ? $error = true : $dispMovil->setRam($_POST['ram']);
-                        empty($_POST['pantalla']) ? $error = true : $dispMovil->setTamanoPantalla($_POST['pantalla']);
-                        if (!$error) {
+                        empty($_POST['almacenamiento']) ? $error .= "Almacenamiento Invalido " : $dispMovil->setAlmacenamiento($_POST['almacenamiento']);
+                        empty($_POST['ram']) ? $error .= "Ram Invalida " : $dispMovil->setRam($_POST['ram']);
+                        empty($_POST['pantalla']) ? $error .= "Pantalla Invalida" : $dispMovil->setTamanoPantalla($_POST['pantalla']);
+                        if ($error == "") {
                             $this->entityManager->persist($dispMovil);
                             $this->entityManager->flush();
                             return $this->redirectToRoute('app_articulo');
@@ -153,6 +162,10 @@ class ArticuloController extends AbstractController
                             
                             $this->entityManager->remove($articulo);
                             $this->entityManager->flush();
+                            $this->addFlash(
+                               'error',
+                               $error
+                            );
                             return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el dispositivo']);
                         }
                     } else {
@@ -160,25 +173,28 @@ class ArticuloController extends AbstractController
                     }
                     break;
                 case 'VideoJuego':
-                    if (!$error) {
+                    if ($error == "") {
                         
                         $this->entityManager->persist($articulo);
                         $this->entityManager->flush();
                         
                         $videoJuego = new Videojuego();
                         $videoJuego->setIdarticulo($articulo);
-                        empty($_POST['plataforma']) ? $error = true : $videoJuego->setIdplataforma($this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataforma'])));
-                        if (!$error) {
+                        empty($_POST['plataforma']) ? $error .= "Plataforma Invalida " : $videoJuego->setIdplataforma($this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataforma'])));
+                        if ($error == "") {
                             $this->entityManager->persist($videoJuego);
                             $this->entityManager->flush();
 
                             for ($i=0; $i < sizeof($_POST['etiquetas']); $i++) { 
                                 $etiquetavideojuego = new Etiquetavideojuego();
-                                var_dump([$i]);
                                 $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findOneBy(array('idetiqueta' => $_POST['etiquetas'][$i]));
                                 $etiquetavideojuego->setIdetiqueta($etiqueta);
                                 $etiquetavideojuego->setIdvideojuego($videoJuego);
                                 if (is_null($etiqueta)) {
+                                    $this->addFlash(
+                                       'error',
+                                       $error
+                                    );
                                     return $this->redirectToRoute('app_articulo');
                                 } else {
                                     $this->entityManager->persist($etiquetavideojuego);
@@ -217,6 +233,8 @@ class ArticuloController extends AbstractController
 
         $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
 
+        $imagenArticulo = $articulo->getFoto();
+
         $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
 
         switch ($vistaTipo->getTipoarticulo()) {
@@ -242,12 +260,18 @@ class ArticuloController extends AbstractController
         $this->entityManager->remove($articulo);
         $this->entityManager->flush();
 
+        if ($imagenArticulo != null) {
+            unlink($this->getParameter('images_directory') . '/' . $imagenArticulo);
+        }
+
         return $this->redirectToRoute('app_articulo');
     }
 
     #[Route('/articulos/edit/{id}', name: 'app_articulo_edit', methods:['GET', 'POST'])]
     public function edit(int $id, SluggerInterface $sluggerInterface, Request $request): Response
     {
+
+        $error = "";
 
         $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
 
@@ -258,16 +282,23 @@ class ArticuloController extends AbstractController
         $parametros['tipo'] = $vistaTipo->getTipoarticulo();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            empty($_POST['nombre']) ? : $articulo->setNombre($_POST['nombre']);
-            empty($_POST['precio']) ? : $articulo->setPrecio($_POST['precio']);
-            empty($_POST['stock']) ? : $articulo->setStock($_POST['stock']);
-            empty($_POST['stock_alquiler']) ? : $articulo->setStockalquiler($_POST['stock_alquiler']);
+            empty($_POST['nombre']) ? $error .= "Nombre Invalido" : $articulo->setNombre($_POST['nombre']);
+            empty($_POST['precio']) || $_POST['precio'] < 0 ? $error .= "Precio Invalido" : $articulo->setPrecio($_POST['precio']);
+            !is_numeric($_POST['stock']) || $_POST['stock'] < 0 ? $error .= "Stock Invalido" : $articulo->setStock($_POST['stock']);
+            !is_numeric($_POST['stock_alquiler']) || $_POST['stock_alquiler'] < 0 ? $error .= "Stock Alquiler Invalido" : $articulo->setStockalquiler($_POST['stock_alquiler']);
+            if ($error != "") {
+                $this->addFlash(
+                    'error',
+                    $error
+                 );
+                return $this->redirectToRoute('app_articulo');
+            }
             if (empty($_FILES['foto']['name'])) {
                 
             } else {
                 if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg') 
                 {
-                    
+                    $error .= "Formato de foto Invalido";   
                 } else
                 {
                     $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
@@ -283,25 +314,32 @@ class ArticuloController extends AbstractController
                         $articulo->setFoto($nombreFoto);
                         
                     } catch (FileException $e) {
-                        $error = true;
+                        $error .= "Fallo al subir la foto";
                     }
                 }
             }
-            empty($_POST['idMarca']) ? : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
+            empty($_POST['idMarca']) ? $error .= "Marca Invalido " : $articulo->setIdmarca($this->entityManager->getRepository(Marca::class)->findOneby(array('idmarca' => $_POST['idMarca'])));
             $this->entityManager->persist($articulo);
             $this->entityManager->flush();
             switch ($vistaTipo->getTipoarticulo()) {
                 case 'Consola':
                     $articuloTipo = $this->entityManager->getRepository(Consola::class)->findOneBy(array('idarticulo' => $id));
-                    empty($_POST['modelo']) ? : $articuloTipo->setModelo($_POST['modelo']);
-                    empty($_POST['cant_mandos']) ? : $articuloTipo->setCantmandos($_POST['cant_mandos']);
-                    empty($_POST['almacenamientoConsola']) ? : $articuloTipo->setAlmacenamiento($_POST['almacenamientoConsola']);
+                    empty($_POST['modelo']) ? $error .= "Modelo Invalido " : $articuloTipo->setModelo($_POST['modelo']);
+                    empty($_POST['cant_mandos']) ? $error .= "Cantidad de mandos Invalido " : $articuloTipo->setCantmandos($_POST['cant_mandos']);
+                    empty($_POST['almacenamientoConsola']) ? $error .= "Almacenamiento Invalido " : $articuloTipo->setAlmacenamiento($_POST['almacenamientoConsola']);
                     $this->entityManager->getRepository(Plataformaconsola::class)->removeByConsola($articuloTipo->getIdconsola());
                     for ($i=0; $i < sizeof($_POST['plataformas']); $i++) { 
                         $paltaformaConsola = new Plataformaconsola();
                         $paltaformaConsola->setIdconsola($articuloTipo);
                         $paltaforma = $this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataformas'][$i]));
                         if (is_null($paltaforma)) {
+                            $error .= "Plataforma Invalida ";
+                            if ($error != "") {
+                                $this->addFlash(
+                                    'error',
+                                    $error
+                                 );
+                            }
                             return $this->redirectToRoute('app_articulo');
                         } else {
                             $paltaformaConsola->setIdplataforma($paltaforma);
@@ -312,13 +350,13 @@ class ArticuloController extends AbstractController
                     break;
                 case 'DispositivoMovil':
                     $articuloTipo = $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('idarticulo' => $id));
-                    empty($_POST['almacenamiento']) ? : $articuloTipo->setAlmacenamiento($_POST['almacenamiento']);
-                    empty($_POST['ram']) ? : $articuloTipo->setRam($_POST['ram']);
-                    empty($_POST['pantalla']) ? : $articuloTipo->setTamanoPantalla($_POST['pantalla']);
+                    empty($_POST['almacenamiento']) ? $error .= "Almacenamiento Invalido" : $articuloTipo->setAlmacenamiento($_POST['almacenamiento']);
+                    empty($_POST['ram']) ? $error .= "Ram Invalida " : $articuloTipo->setRam($_POST['ram']);
+                    empty($_POST['pantalla']) ? $error .= "Pantalla Invalida " : $articuloTipo->setTamanoPantalla($_POST['pantalla']);
                     break;
                 case 'Videojuego':
                     $articuloTipo = $this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idarticulo' => $id));
-                    empty($_POST['plataforma']) ? : $articuloTipo->setIdplataforma($this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataforma'])));
+                    empty($_POST['plataforma']) ? $error .= "Plataforma Invalida " : $articuloTipo->setIdplataforma($this->entityManager->getRepository(Plataforma::class)->findOneby(array('idplataforma' => $_POST['plataforma'])));
                     $this->entityManager->getRepository(Etiquetavideojuego::class)->removeByVideojuego($articuloTipo->getIdvideojuego());
                     for ($i=0; $i < sizeof($_POST['etiquetas']); $i++) { 
                         $etiquetavideojuego = new Etiquetavideojuego();
@@ -326,6 +364,13 @@ class ArticuloController extends AbstractController
                         $etiquetavideojuego->setIdetiqueta($etiqueta);
                         $etiquetavideojuego->setIdvideojuego($articuloTipo);
                         if (is_null($etiqueta)) {
+                            $error .= "Etiqueta Invalida";
+                            if ($error != "") {
+                                $this->addFlash(
+                                    'error',
+                                    $error
+                                 );
+                            }
                             return $this->redirectToRoute('app_articulo');
                         } else {
                             $this->entityManager->persist($etiquetavideojuego);
@@ -339,6 +384,12 @@ class ArticuloController extends AbstractController
             }
             $this->entityManager->persist($articuloTipo);
             $this->entityManager->flush();
+            if ($error != "") {
+                $this->addFlash(
+                    'error',
+                    $error
+                 );
+            }
             return $this->redirectToRoute('app_articulo');
         } else {
             $datosExtraExtra = null;    

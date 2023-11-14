@@ -8,6 +8,8 @@
 {% block body %}
     <h1>{{ titulo }}</h1>
 
+    
+
 
     <table class = "text-center table table-bordered">
        <thead>
@@ -34,10 +36,10 @@
                    TIPO
                </th>
                <th>
-                   BORRAR
+                   EDITAR
                </th>
                <th>
-                   EDITAR
+                   BORRAR
                </th>
            </tr>
        </thead>
@@ -51,8 +53,8 @@
             <td>{{ articulo.stock }}</td>
             <td><img class="fotoArticulo" src="{{images_directory}}{{ articulo.foto }}"></img></td>
             <td>{{ articulo.tipoarticulo }}</td>
-            <td><div id="tdEliminar"><form action="{{ path('app_articulo_delete', {'id': articulo.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
             <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
+            <td><div id="tdEliminar"><form action="{{ path('app_articulo_delete', {'id': articulo.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
         </tr>
         {% endfor %}
         </tbody>
