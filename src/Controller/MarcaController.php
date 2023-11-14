@@ -107,6 +107,14 @@ class MarcaController extends AbstractController
         return $this->convertToJson($datos);
     }
 
+    #[Route('/api/marcas/{tipo}', name: 'app_marca_api_tipo')]
+    public function allMarcasOfArticuloType(string $tipo): JsonResponse
+    {
+        $datos = $this->entityManager->getRepository(Marca::class)->findMarcaOfArticuloType($tipo);
+
+        return $this->convertToJson($datos);
+    }
+
 
     private function convertToJson($object): JsonResponse
     {

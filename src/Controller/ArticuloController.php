@@ -441,6 +441,14 @@ class ArticuloController extends AbstractController
         return $this->convertToJson($datos);
     }
 
+    #[Route('/api/articulos/buscarEtiqueta/{etiqueta}', name: 'app_articulo_buscar_etiquetas')]
+    public function buscarEtiquetas(string $etiqueta): JsonResponse
+    {
+        $articulos = $this->entityManager->getRepository(Articulo::class)->findVideoJuegoByTag($etiqueta);
+
+        return $this->convertToJson($articulos);
+    }
+
 
     private function convertToJson($object): JsonResponse
     {

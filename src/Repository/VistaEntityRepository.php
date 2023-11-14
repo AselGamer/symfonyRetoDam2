@@ -48,6 +48,7 @@ class VistaEntityRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    
 
 
     /*
