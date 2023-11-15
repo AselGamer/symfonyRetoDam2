@@ -442,7 +442,7 @@ class ArticuloController extends AbstractController
     }
 
 
-    #[Route('/api/articulos/{tipo}', name: 'app_articulo_api_tipo', methods:['GET'])]
+    #[Route('/api/articulos/tipo/{tipo}', name: 'app_articulo_api_tipo', methods:['GET'])]
     public function ArticulosTipo(string $tipo): Response
     {
         $articulos = $this->entityManager->getRepository(VistaEntity::class)->findByType($tipo);
@@ -506,6 +506,79 @@ class ArticuloController extends AbstractController
         $articulos = $this->entityManager->getRepository(Articulo::class)->findVideoJuegoByTag($etiqueta);
 
         return $this->convertToJson($articulos);
+    }
+
+    #[Route('/api/articulos/marca/{marca}', name: 'app_articulo_marcas', methods:['GET'])]
+    public function buscarMarcas(string $marca): JsonResponse
+    {
+        $articulos = $this->entityManager->getRepository(Articulo::class)->findBy(['idmarca'=>$marca]);
+
+        return $this->convertToJson($articulos);
+    }
+
+    #[Route('/api/articulos/marcas', name: 'app_articulo_marca_todos', methods:['GET'])]
+    public function buscarMarcasAll(): JsonResponse
+    {
+        $marcasArticulos = array();
+
+        $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
+
+        foreach ($marcas as $marca) {
+            $marcasArticulos[$marca->getNombre()] = $this->entityManager->getRepository(Articulo::class)->findBy(['idmarca'=>$marca->getIdmarca()]);
+        }
+
+        return $this->convertToJson($marcasArticulos);
+    }
+
+    #[Route('/api/articulos/marcas/tipo/{tipo}', name: 'app_articulo_marca_todos_tipo', methods:['GET'])]
+    public function buscarMarcasAllTipo(string $tipo): JsonResponse
+    {
+        $marcasArticulos = array();
+
+        $marcas = $this->entityManager->getRepository(Marca::class)->findMarcaOfArticuloType($tipo);
+
+        foreach ($marcas as $marca) {
+            $marcasArticulos[$marca->getNombre()] = $this->entityManager->getRepository(Articulo::class)->findBy(['idmarca'=>$marca->getIdmarca()]);
+            if (sizeof($marcasArticulos[$marca->getNombre()]) == 0) {
+                unset($marcasArticulos[$marca->getNombre()]);
+            }
+        }
+
+        return $this->convertToJson($marcasArticulos);
+    }
+
+    #[Route('/api/articulos/etiquetas/', name: 'app_articulo_etiquetas_todos', methods:['GET'])]
+    public function buscarEtiquetasAll(): JsonResponse
+    {
+        $etiquetasArticulos = array();
+
+        $etiquetas = $this->entityManager->getRepository(Etiqueta::class)->findAll();
+
+        foreach ($etiquetas as $etiqueta) {
+            $etiquetasArticulos[$etiqueta->getNombre()] = $this->entityManager->getRepository(Articulo::class)->findVideoJuegoByTag($etiqueta->getNombre());
+            if (sizeof($etiquetasArticulos[$etiqueta->getNombre()]) == 0) {
+                unset($etiquetasArticulos[$etiqueta->getNombre()]);
+            }
+        }
+
+        return $this->convertToJson($etiquetasArticulos);
+    }
+
+    #[Route('/api/articulos/tipo/', name: 'app_articulo_tipo_todos', methods:['GET'])]
+    public function buscarTipoAll(): JsonResponse
+    {
+        $tiposArticulos = array();
+
+        $tipos = array('Consola', 'Videojuego', 'DispositivoMovil');
+
+        foreach ($tipos as $tipo) {
+            $tiposArticulos[$tipo] = $this->entityManager->getRepository(VistaEntity::class)->findBy(['tipoarticulo'=>$tipo]);
+            if (sizeof($tiposArticulos[$tipo]) == 0) {
+                unset($tiposArticulos[$tipo]);
+            }
+        }
+
+        return $this->convertToJson($tiposArticulos);
     }
 
 

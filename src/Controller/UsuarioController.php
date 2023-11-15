@@ -14,9 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UsuarioController extends AbstractController
@@ -29,7 +31,7 @@ class UsuarioController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/api/usuario', name: 'app_usuario')]
+    #[Route('/api/usuario', name: 'app_usuario', methods:['GET'])]
     public function allUsuarios(): JsonResponse
     {
         $datos = $this->entityManager->getRepository(Usuario::class)->findAll();
@@ -69,8 +71,60 @@ class UsuarioController extends AbstractController
         }
     }
 
+    #[Route('/api/usuario/actualizar', name: 'app_usuario_actualizar', methods:['POST'])]
+    public function actualizarUsuario(Request $request, UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface): JsonResponse
+    {
 
-    #[Route('/', name: 'app_usuario')]
+        /** @var Usuario $usuario */
+        $usaurioExist = $this->getUser();
+
+        if (!$usaurioExist) {
+            return new JsonResponse(['data' => 'Usuario no existe'], JsonResponse::HTTP_CONFLICT);
+        }
+
+        $data = json_decode($request->getContent(),true);
+
+        empty($data['nombre']) ? true : $usaurioExist->setNombre($data['nombre']);
+        empty($data['apellido1']) ? true : $usaurioExist->setApellido1($data['apellido1']);
+        empty($data['apellido2']) ? true : $usaurioExist->setApellido2($data['apellido2']);
+        empty($data['email']) ? true : $usaurioExist->setEmail($data['email']);
+        empty($data['password']) ? true : $usaurioExist->setPassword($passwordHasher->hashPassword($usaurioExist, $data['password']));
+        empty($data['telefono']) ? true : $usaurioExist->setTelefono($data['telefono']);
+        empty($data['calle']) ? true : $usaurioExist->setCalle($data['calle']);
+        empty($data['numPortal']) ? true : $usaurioExist->setNumPortal($data['numPortal']);
+        empty($data['piso']) ? true : $usaurioExist->setPiso($data['piso']);
+        empty($data['codigoPostal']) ? true : $usaurioExist->setCodigoPostal($data['codigoPostal']);
+        empty($data['ciudad']) ? true : $usaurioExist->setCiudad($data['ciudad']);
+        empty($data['pais']) ? true : $usaurioExist->setPais($data['pais']);
+        empty($data['provincia']) ? true : $usaurioExist->setProvincia($data['provincia']);
+        if (!empty($request->files->get('imagen'))) {
+            if (pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION) == 'jpg' || pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION) == 'png' || pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION) == 'jpeg') {
+                $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['imagen']['name'], PATHINFO_FILENAME));
+                    $nombreFoto = $nombreFoto . '-' . uniqid() . '.' . pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
+                    try {
+                        /** @var UploadedFile $uploadedFile */
+                        $uploadedFile = $request->files->get('imagen');
+
+                        $uploadedFile->move(
+                            $this->getParameter('userimages_directory'),
+                            $nombreFoto
+                        );
+                        $usaurioExist->setFoto($nombreFoto);
+                        
+                    } catch (FileException $e) {
+
+                    }
+            }
+        }
+        
+        $this->entityManager->flush();
+
+        return new JsonResponse(['data' => 'Usuario Actualizado'], JsonResponse::HTTP_CREATED);
+            
+    }
+
+
+    #[Route('/', name: 'app_redirect_to_login')]
     public function redirectToLogin(): Response
     {
         return $this->redirect('/login',301);
@@ -88,6 +142,7 @@ class UsuarioController extends AbstractController
         $datos['apellido1'] = $usuario->getApellido1();
         $datos['apellido2'] = $usuario->getApellido2();
         $datos['email'] = $usuario->getEmail();
+        $datos['password'] = "";
         $datos['telefono'] = $usuario->getTelefono();
         $datos['calle'] = $usuario->getCalle();
         $datos['numPortal'] = $usuario->getNumPortal();

@@ -48,6 +48,15 @@ class VistaEntityRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function searchArticuloNoType(string $type, string $search)
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT a
+        FROM App\Entity\VistaEntity a
+        WHERE a.tipoarticulo = :tipo AND a.articulonombre LIKE :search")->setParameter('tipo', $type)->setParameter('search', '%'.$search.'%');
+
+        return $query->getResult();
+    }
+
     
 
 

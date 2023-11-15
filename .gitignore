@@ -32,4 +32,7 @@ yarn-error.log
 ###< images folder ###
 /public/images/
 ###> images folder ###
+###< user images folder ###
+/public/userimages/
+###> user images folder ###
 ```
