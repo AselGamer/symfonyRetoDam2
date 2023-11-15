@@ -8,7 +8,24 @@
 {% block body %}
     <h1>{{ titulo }}</h1>
 
-    
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Atencion!</h5>
+                </div>
+                <div class="modal-body">
+                    <h5>¿Estas seguro de que quieres borrar este articulo?</h5>
+                    <h5>Esta accion no se puede deshacer</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger botonBorrar">Eliminar</button>
+                    <button type="button" class="btn btn-primary closeModal" >Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <table class = "text-center table table-bordered">
@@ -54,7 +71,7 @@
             <td><img class="fotoArticulo" src="{{images_directory}}{{ articulo.foto }}"></img></td>
             <td>{{ articulo.tipoarticulo }}</td>
             <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
-            <td><div id="tdEliminar"><form action="{{ path('app_articulo_delete', {'id': articulo.idArticulo}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+            <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start btnDelete" type="submit" data-toggle="modal" id-eliminar="{{ articulo.idArticulo }}">Borrar</button></div></td>
         </tr>
         {% endfor %}
         </tbody>

@@ -15,6 +15,7 @@ jQuery(window).on('load', function() {
     let cantPlataformas = 1;
     let cantEtiqueta = 1;
     let estadoCarga = 0;
+    let articuloEliminar = -1;
 
     showFields(jQuery('#tipo').val());
 
@@ -149,5 +150,15 @@ jQuery(window).on('load', function() {
                 jQuery('.finalizado').show();
                 break;
         }
-    }
+    };
+
+    jQuery('.btnDelete').on('click', function() {
+        articuloEliminar = jQuery(this).attr('id-eliminar');
+        jQuery('.modal').show();
+    });
+
+    jQuery('.botonBorrar').on('click', function() {
+        window.location.href = '/articulos/delete/' + articuloEliminar;
+    });
+    
 });

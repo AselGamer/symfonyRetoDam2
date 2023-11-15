@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Marca;
 use App\Entity\Consola;
 use App\Entity\Articulo;
+use App\Entity\Detalletransaccion;
 use App\Entity\Etiqueta;
 use App\Entity\Plataforma;
 use App\Entity\Videojuego;
@@ -227,13 +228,23 @@ class ArticuloController extends AbstractController
         return $this->render('articulos/add.html.twig', $parametros);
     }
 
-    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['POST'])]
+    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['GET'])]
     public function delete(int $id): Response
     {
 
         $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
 
+        $transacciones = $this->entityManager->getRepository(Detalletransaccion::class)->findBy(array('idarticulo' => $id));
+
         $imagenArticulo = $articulo->getFoto();
+
+        if (sizeof($transacciones) > 0) {
+            $this->addFlash(
+                'error',
+                'No se puede eliminar el articulo porque tiene transacciones asociadas'
+             );
+            return $this->redirectToRoute('app_articulo');
+        }
 
         $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
 
@@ -241,16 +252,13 @@ class ArticuloController extends AbstractController
             case 'Consola':
                 $this->entityManager->getRepository(Plataformaconsola::class)->removeByConsola($vistaTipo->getIdtipoClase());
                 $this->entityManager->remove($this->entityManager->getRepository(Consola::class)->findOneBy(array('idarticulo' => $id)));
-                $this->entityManager->flush();
                 break;
             case 'DispositivoMovil':
                 $this->entityManager->remove($this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('idarticulo' => $id)));
-                $this->entityManager->flush();
                 break;
             case 'Videojuego':
                 $this->entityManager->remove($this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idarticulo' => $id)));
                 $this->entityManager->getRepository(Etiquetavideojuego::class)->removeByVideojuego($vistaTipo->getIdtipoClase());
-                $this->entityManager->flush();
                 break;
             default:
                 # code...
