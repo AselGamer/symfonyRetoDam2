@@ -431,6 +431,25 @@ class ArticuloController extends AbstractController
         }
     }
 
+    #[Route('/articulos/buscar/', name: 'app_articulo_buscar_redirect', methods:['GET'])]
+    public function ArticulosBuscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_articulo');
+    }
+
+    #[Route('/articulos/buscar/{busqueda}', name: 'app_articulo_buscar', methods:['GET'])]
+    public function ArticulosBuscarPagina(string $busqueda): Response
+    {
+
+        $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticuloPagina($busqueda);
+
+        $parametros['articulos'] = $articulos;
+
+        $parametros['titulo'] = 'Articulos';
+
+        return $this->render('articulos/index.html.twig', $parametros);
+    }
+
     #[Route('/api/articulos', name: 'app_articulo_api', methods:['GET'])]
     public function indexApi(): Response
     {

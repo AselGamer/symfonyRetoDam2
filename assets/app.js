@@ -160,5 +160,25 @@ jQuery(window).on('load', function() {
     jQuery('.botonBorrar').on('click', function() {
         window.location.href = '/articulos/delete/' + articuloEliminar;
     });
+
+
+    jQuery('.btnBuscarTabla').on('click', function() {
+        let valor = jQuery('.inputBuscarTabla').val();
+        jQuery('.tablaBuscar tr').each(function() {
+
+            jQuery(this).filter(function() {
+                jQuery(this).hide();
+                if(jQuery(this).text().toLowerCase().indexOf(valor.toLowerCase()) > -1)
+                {
+                    jQuery(this).show();
+                }
+              });
+        });
+    });
+
+    jQuery('.btnBuscarArticulos').on('click', function() {
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/articulos/buscar/' + valor;
+    });
     
 });

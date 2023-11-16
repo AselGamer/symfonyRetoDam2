@@ -6,7 +6,40 @@
 
 
 {% block body %}
-    <h1>{{ titulo }}</h1>
+    <h1 class="m-3">{{ titulo }}</h1>
+
+    <div class="align-self-end">
+            <div class=" d-flex flex-row justify-content-end align-items-end">
+
+                <div class="col-md-8">
+
+                <div class="search d-flex flex-row justify-content-end align-items-center">
+                    <i class="fa fa-search"></i>
+                    <input type="text" class="form-control inputBuscarTodo h-auto" placeholder="Buscar todos los productos">
+                    <button class="btn btn-primary btnBuscarArticulos btnControl h-auto">Buscar</button>
+                </div>
+                
+                </div>
+                
+            </div>
+        </div>
+
+
+    <div class="align-self-end">
+        <div class=" d-flex flex-row justify-content-end align-items-end">
+
+            <div class="col-md-8">
+
+            <div class="search d-flex flex-row justify-content-end align-items-center">
+                <i class="fa fa-search"></i>
+                <input type="text" class="form-control inputBuscarTabla w-50" placeholder="Buscar en esta tabla">
+                <button class="btn btn-primary btnBuscarTabla btnControl">Buscar</button>
+            </div>
+            
+            </div>
+            
+        </div>
+    </div>
 
 
     <div class="modal" tabindex="-1" role="dialog">
@@ -28,8 +61,8 @@
     </div>
 
 
-    <table class = "text-center table table-bordered">
-       <thead>
+    <table class = "text-center table table-bordered table-hover">
+       <thead class="thead-dark">
            <tr>
                <th>
                    ID
@@ -60,7 +93,7 @@
                </th>
            </tr>
        </thead>
-        <tbody>
+        <tbody class="tablaBuscar">
         {% for articulo in articulos %}
         <tr>
             <td>{{ articulo.idArticulo }}</td>
@@ -70,15 +103,15 @@
             <td>{{ articulo.stock }}</td>
             <td><img class="fotoArticulo" src="{{images_directory}}{{ articulo.foto }}"></img></td>
             <td>{{ articulo.tipoarticulo }}</td>
-            <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
-            <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start btnDelete" type="submit" data-toggle="modal" id-eliminar="{{ articulo.idArticulo }}">Borrar</button></div></td>
+            <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start btnControl">Editar</button></a></div></td>
+            <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start btnDelete btnControl" type="submit" data-toggle="modal" id-eliminar="{{ articulo.idArticulo }}">Borrar</button></div></td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 
         <a href="{{ path('app_articulo_add') }}" >
-            <button class="btn btn-lg btn-primary float-start">Añadir Articulo</button>
+            <button class="btn btn-lg btn-primary float-start m-3 btnControl">Añadir Articulo</button>
         </a>
 
 {% endblock %}

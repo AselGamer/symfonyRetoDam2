@@ -200,3 +200,41 @@ td
     padding: 10px 20px;
     cursor: pointer;
 }
+
+.search input{
+    text-indent: 25px;
+    border: 2px solid #d6d4d4;
+    line-height: normal;
+}
+
+.search
+{
+    padding-left: 50vh;
+}
+
+
+.search input:focus{
+    box-shadow: none;
+    border: 2px solid black;
+}
+
+.search button{
+    width: 110px;
+    background: black;
+    line-height: normal;
+    text-align: center;
+}
+
+.btnControl:hover
+{
+    background: grey;
+}
+
+.btnBuscarTabla, .inputBuscarTabla
+{
+    height: 2em;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
