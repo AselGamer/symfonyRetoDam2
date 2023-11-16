@@ -28,6 +28,22 @@ class MarcaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function countMarcas()
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT COUNT(m) AS total
+        FROM App\Entity\Marca m");
+
+        return $query->getResult()[0]['total'];
+    }
+
+    public function findAllOffsetWithMax(int $offset)
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT m
+        FROM App\Entity\Marca m")->setMaxResults(10)->setFirstResult($offset * 10);
+
+        return $query->getResult();
+    }
+
 
     
 
