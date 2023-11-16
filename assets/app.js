@@ -165,7 +165,7 @@ jQuery(window).on('load', function() {
         window.location.href = '/marcas/delete/' + articuloEliminar;
     });
 
-
+ 
 
     jQuery('.btnBuscarTabla').on('click', function() {
         let valor = jQuery('.inputBuscarTabla').val();
