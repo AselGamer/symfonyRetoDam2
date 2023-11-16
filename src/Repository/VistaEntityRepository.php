@@ -70,6 +70,22 @@ class VistaEntityRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function countArticulos()
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT COUNT(a) AS total
+        FROM App\Entity\VistaEntity a");
+
+        return $query->getResult()[0]['total'];
+    }
+
+    public function findAllOffsetWithMax(int $offset)
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT a
+        FROM App\Entity\VistaEntity a")->setMaxResults(10)->setFirstResult($offset * 10);
+
+        return $query->getResult();
+    }
+
     
 
 

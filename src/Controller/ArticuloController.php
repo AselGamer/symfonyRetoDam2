@@ -36,9 +36,21 @@ class ArticuloController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/articulos', name: 'app_articulo')]
-    public function index(Request $request): Response
+    #[Route('/articulos/pagina/{offset}', name: 'app_articulo')]
+    public function index(int $offset, Request $request): Response
     {
+        if ($offset <= 0) {
+            return $this->redirectToRoute('app_articulo', array('offset' => 1));
+        }
+
+        $totalArticulos = $this->entityManager->getRepository(VistaEntity::class)->countArticulos();
+
+        $cantPaginas = ceil($totalArticulos / 10);
+
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_articulo', array('offset' => $cantPaginas));
+        }
+
         $error = $request->getContent();
         $parametros['error'] = false;
         if ($error) {
@@ -47,12 +59,19 @@ class ArticuloController extends AbstractController
 
         $parametros['titulo'] = 'Articulos';
 
-        $articulos = $this->entityManager->getRepository(VistaEntity::class)->findAll();
+        $parametros['paginas'] = $cantPaginas;
 
+        $articulos = $this->entityManager->getRepository(VistaEntity::class)->findAllOffsetWithMax($offset - 1);
 
         $parametros['articulos'] = $articulos;
 
         return $this->render('articulos/index.html.twig', $parametros);
+    }
+
+    #[Route('/articulos', name: 'app_articulo_redirect')]
+    public function redirectToindex(): Response
+    {
+        return $this->redirectToRoute('app_articulo', array('offset' => 0));
     }
 
 
@@ -434,7 +453,7 @@ class ArticuloController extends AbstractController
     #[Route('/articulos/buscar/', name: 'app_articulo_buscar_redirect', methods:['GET'])]
     public function ArticulosBuscarRedirect(): Response
     {
-        return $this->redirectToRoute('app_articulo');
+        return $this->redirectToRoute('app_articulo', array('offset' => 0));
     }
 
     #[Route('/articulos/buscar/{busqueda}', name: 'app_articulo_buscar', methods:['GET'])]
@@ -446,6 +465,8 @@ class ArticuloController extends AbstractController
         $parametros['articulos'] = $articulos;
 
         $parametros['titulo'] = 'Articulos';
+
+        $parametros['paginas'] = 1;
 
         return $this->render('articulos/index.html.twig', $parametros);
     }

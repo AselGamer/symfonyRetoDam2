@@ -4,11 +4,13 @@ body {
     background-color: lightgray;
 }
 
-nav
+.navPagina
 {
     background-color: black;
     color: white;
 }
+
+
 
 .nav-link, .navbar-brand
 {
