@@ -6,7 +6,7 @@
     <div class="container">
     <div class="row">
         <div class="login-form bg-light mt-4 p-4">
-            <form method="post" class="row g-3" action="{{ path('app_marca_add') }}" enctype='multipart/form-data'>
+            <form method="post" class="row g-3" action="{{ path('app_marca_add' , {'offset': 1}) }}" enctype='multipart/form-data'>
                 <h1 class="h3 mb-3 font-weight-normal">Añadir Marca</h1>
                 <div class="col-12">
                     <label for="nombre">Nombre</label>

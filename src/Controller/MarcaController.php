@@ -25,21 +25,38 @@ class MarcaController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/marcas', name: 'app_marca')]
-    public function index(Request $request): Response
+    #[Route('/marcas/pagina/{offset}', name: 'app_marca')]
+    public function index(int $offset, Request $request): Response
     {
-
-        $error = $request->getContent();
-        $parametros['error'] = false;
-        if ($error) {
-            $parametros['error'] = $error;
+        if ($offset < 1) {
+            return $this->redirectToRoute('app_marca', ['offset' => 1]);
         }
 
-        $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
+        $totalMarcas = $this->entityManager->getRepository(Marca::class)->countMarcas();
+        
+        if ($totalMarcas == 0) {
+            return $this->redirectToRoute('app_marca_add');
+        }
+
+        $cantPaginas = ceil($totalMarcas / 10);
+
+        $parametros['paginas'] = $cantPaginas;
+
+        if ($offset > $parametros['paginas']) {
+            return $this->redirectToRoute('app_marca', ['offset' => $cantPaginas]);
+        }
+
+        $marcas = $this->entityManager->getRepository(Marca::class)->findAllOffsetWithMax($offset - 1);
 
         $parametros['marcas'] = $marcas;
 
         return $this->render('marca/index.html.twig', $parametros);
+    }
+
+    #[Route('/marcas', name: 'app_marca_redirect')]
+    public function redirectToIndex(): Response
+    {
+        return $this->redirectToRoute('app_marca', ['offset' => 1]);
     }
 
     #[Route('/marcas/add', name: 'app_marca_add')]
@@ -54,7 +71,7 @@ class MarcaController extends AbstractController
             $this->entityManager->persist($marca);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_marca');
+            return $this->redirectToRoute('app_marca', ['offset' => 1]);
         }
 
         return $this->render('marca/add.html.twig');
@@ -66,7 +83,7 @@ class MarcaController extends AbstractController
         $marca = $this->entityManager->getRepository(Marca::class)->find($id);
 
         if (!$marca) {
-            return $this->redirectToRoute('app_marca');
+            return $this->redirectToRoute('app_marca', ['offset' => 1]);
         }
 
         $nombre = $request->request->get('nombre');
@@ -76,7 +93,7 @@ class MarcaController extends AbstractController
 
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_marca');
+            return $this->redirectToRoute('app_marca', ['offset' => 1]);
         }
 
         $parametros['marca'] = $marca;
@@ -90,13 +107,13 @@ class MarcaController extends AbstractController
         $marca = $this->entityManager->getRepository(Marca::class)->find($id);
 
         if (!$marca) {
-            return $this->redirectToRoute('app_marca');
+            return $this->redirectToRoute('app_marca', ['offset' => 1]);
         }
 
         $this->entityManager->remove($marca);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_marca');
+        return $this->redirectToRoute('app_marca', ['offset' => 1]);
     }
 
     #[Route('/api/marcas', name: 'app_marca_api')]
