@@ -514,10 +514,17 @@ class ArticuloController extends AbstractController
 
         switch ($articulo->getTipoarticulo()) {
             case 'Consola':
-                array_push($datos, $this->entityManager->getRepository(Consola::class)->findOneBy(['idarticulo'=>$id]));
-                $plataformas = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(['idconsola'=>$datos[0]->getIdconsola()]);
+                $consola = $this->entityManager->getRepository(Consola::class)->findOneBy(['idarticulo'=>$id]);
+                array_push($datos, [
+                'idconsola'=>$consola->getIdconsola(), 
+                'modelo'=>$consola->getModelo(), 
+                'cantmandos'=>$consola->getCantmandos(), 
+                'almacenamiento'=>$consola->getAlmacenamiento(),
+                'idarticulo'=>$consola->getIdarticulo()]);
+                $plataformas = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(['idconsola'=>$consola->getIdconsola()]);
+                $datos[0]['plataformas'] = [];
                 foreach ($plataformas as $plataforma) {
-                    array_push($datos, $plataforma->getIdplataforma());
+                    array_push($datos[0]['plataformas'], $plataforma->getIdplataforma());
                 }
                 break;
             
@@ -526,10 +533,15 @@ class ArticuloController extends AbstractController
                 break;
             
             case 'Videojuego':
-                array_push($datos, $this->entityManager->getRepository(Videojuego::class)->findOneBy(['idarticulo'=>$id]));
-                $etiqueta = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(['idvideojuego'=>$datos[0]->getIdvideojuego()]);
+                $videoJuego = $this->entityManager->getRepository(Videojuego::class)->findOneBy(['idarticulo'=>$id]);
+                array_push($datos, [
+                'idvideojuego' => $videoJuego->getIdvideojuego(), 
+                'idplataforma' =>$videoJuego->getIdplataforma(), 
+                'idarticulo'=>$videoJuego->getIdarticulo()]);
+                $etiqueta = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(['idvideojuego'=>$videoJuego->getIdvideojuego()]);
+                $datos[0]['etiquetas'] = [];
                 foreach ($etiqueta as $etiqueta) {
-                    array_push($datos, array("etiquetas" => $etiqueta->getIdetiqueta()));
+                    array_push($datos[0]['etiquetas'], $etiqueta->getIdetiqueta());
                 }
                 break;
             default:

@@ -66,7 +66,7 @@ class TransaccionController extends AbstractController
                 {
                     array_push($datos[$loop]['detalles'], [
                         'iddetalletransaccion' => $detalle->getIddetalletransaccion(),
-                        'idproducto' => $detalle->getIdarticulo(),
+                        'idarticulo' => $detalle->getIdarticulo(),
                         'precio_total' => $detalle->getPrecioTotal(),
                     ]);
                 }
@@ -76,7 +76,7 @@ class TransaccionController extends AbstractController
             foreach ($transacciones as $transaccion) {
                 $alquiler = $this->entityManager->getRepository(Alquiler::class)->findOneBy(['idtransaccion'=>$transaccion->getIdtransaccion()]);
                 $detallesTransaccion = $this->entityManager->getRepository(Detalletransaccion::class)->findBy(['idtransaccion'=>$transaccion->getIdtransaccion()]);
-                array_push($datos['transacciones'], [
+                array_push($datos, [
                     'idtransaccion' => $transaccion->getIdtransaccion(),
                     'latitud' => $transaccion->getLatitud(),
                     'longitud' => $transaccion->getLongitud(),
@@ -88,9 +88,9 @@ class TransaccionController extends AbstractController
                 ]);
                 foreach ($detallesTransaccion as $detalle)
                 {
-                    array_push($datos['transacciones'][$loop]['detalles'], [
+                    array_push($datos[$loop]['detalles'], [
                         'iddetalletransaccion' => $detalle->getIddetalletransaccion(),
-                        'idproducto' => $detalle->getIdarticulo(),
+                        'idarticulo' => $detalle->getIdarticulo(),
                         'precio_total' => $detalle->getPrecioTotal(),
                     ]);
                 }
