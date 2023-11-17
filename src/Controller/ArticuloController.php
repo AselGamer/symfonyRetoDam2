@@ -529,7 +529,7 @@ class ArticuloController extends AbstractController
                 array_push($datos, $this->entityManager->getRepository(Videojuego::class)->findOneBy(['idarticulo'=>$id]));
                 $etiqueta = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(['idvideojuego'=>$datos[0]->getIdvideojuego()]);
                 foreach ($etiqueta as $etiqueta) {
-                    array_push($datos, $etiqueta->getIdetiqueta());
+                    array_push($datos, array("etiquetas" => $etiqueta->getIdetiqueta()));
                 }
                 break;
             default:

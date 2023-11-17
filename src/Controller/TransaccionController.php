@@ -47,7 +47,7 @@ class TransaccionController extends AbstractController
     {
         $transacciones = $this->entityManager->getRepository(VistaTransaccion::class)->findBy(['idusuario'=>$this->getUser(), 'tipotransaccion'=>$tipo]);
 
-        $datos['transacciones'] = array();
+        $datos = array();
 
         $loop = 0;
 
@@ -55,7 +55,7 @@ class TransaccionController extends AbstractController
             foreach ($transacciones as $transaccion) {
                 $compra = $this->entityManager->getRepository(Compra::class)->findOneBy(['idtransaccion'=>$transaccion->getIdtransaccion()]);
                 $detallesTransaccion = $this->entityManager->getRepository(Detalletransaccion::class)->findBy(['idtransaccion'=>$transaccion->getIdtransaccion()]);
-                array_push($datos['transacciones'], [
+                array_push($datos, [
                     'idtransaccion' => $transaccion->getIdtransaccion(),
                     'latitud' => $transaccion->getLatitud(),
                     'longitud' => $transaccion->getLongitud(),
@@ -64,7 +64,7 @@ class TransaccionController extends AbstractController
                 ]);
                 foreach ($detallesTransaccion as $detalle)
                 {
-                    array_push($datos['transacciones'][$loop]['detalles'], [
+                    array_push($datos[$loop]['detalles'], [
                         'iddetalletransaccion' => $detalle->getIddetalletransaccion(),
                         'idproducto' => $detalle->getIdarticulo(),
                         'precio_total' => $detalle->getPrecioTotal(),
