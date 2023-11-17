@@ -590,7 +590,7 @@ class ArticuloController extends AbstractController
         $marcas = $this->entityManager->getRepository(Marca::class)->findMarcaOfArticuloType($tipo);
 
         foreach ($marcas as $marca) {
-            $marcasArticulos[$marca->getNombre()] = $this->entityManager->getRepository(Articulo::class)->findBy(['idmarca'=>$marca->getIdmarca()]);
+            $marcasArticulos[$marca->getNombre()] = $this->entityManager->getRepository(VistaEntity::class)->findBy(['idmarca'=>$marca->getIdmarca(), 'tipoarticulo'=>$tipo]);
             if (sizeof($marcasArticulos[$marca->getNombre()]) == 0) {
                 unset($marcasArticulos[$marca->getNombre()]);
             }
