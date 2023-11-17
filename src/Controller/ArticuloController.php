@@ -450,7 +450,7 @@ class ArticuloController extends AbstractController
         }
     }
 
-    #[Route('/articulos/buscar/', name: 'app_articulo_buscar_redirect', methods:['GET'])]
+    #[Route('/articulos/buscar', name: 'app_articulo_buscar_redirect', methods:['GET'])]
     public function ArticulosBuscarRedirect(): Response
     {
         return $this->redirectToRoute('app_articulo', array('offset' => 0));
@@ -587,7 +587,7 @@ class ArticuloController extends AbstractController
         return $this->convertToJson($marcasArticulos);
     }
 
-    #[Route('/api/articulos/etiquetas/', name: 'app_articulo_etiquetas_todos', methods:['GET'])]
+    #[Route('/api/articulos/etiquetas', name: 'app_articulo_etiquetas_todos', methods:['GET'])]
     public function buscarEtiquetasAll(): JsonResponse
     {
         $etiquetasArticulos = array();
