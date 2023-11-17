@@ -604,7 +604,7 @@ class ArticuloController extends AbstractController
         return $this->convertToJson($etiquetasArticulos);
     }
 
-    #[Route('/api/articulos/tipo/', name: 'app_articulo_tipo_todos', methods:['GET'])]
+    #[Route('/api/articulos/tipos/', name: 'app_articulo_tipo_todos', methods:['GET'])]
     public function buscarTipoAll(): JsonResponse
     {
         $tiposArticulos = array();
