@@ -14,6 +14,7 @@ use App\Entity\Dispositivomovil;
 use App\Entity\Plataformaconsola;
 use App\Entity\Etiquetavideojuego;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -247,7 +248,7 @@ class ArticuloController extends AbstractController
         return $this->render('articulos/add.html.twig', $parametros);
     }
 
-    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['GET'])]
+    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['DELETE'])]
     public function delete(int $id): Response
     {
 
@@ -288,7 +289,11 @@ class ArticuloController extends AbstractController
         $this->entityManager->flush();
 
         if ($imagenArticulo != null) {
-            unlink($this->getParameter('images_directory') . '/' . $imagenArticulo);
+            try {
+                unlink($this->getParameter('images_directory') . '/' . $imagenArticulo);
+            } catch (\Throwable $th) {
+                
+            }
         }
 
         return $this->redirectToRoute('app_articulo', array('offset' => 1));

@@ -127,6 +127,39 @@ class UsuarioController extends AbstractController
             
     }
 
+    #[Route('/api/usuario/actualizar', name: 'app_usuario_actualizar', methods:['PUT'])]
+    public function actualizarUsuarioNoImage(Request $request, UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface): JsonResponse
+    {
+
+        /** @var Usuario $usuario */
+        $usaurioExist = $this->getUser();
+
+        if (!$usaurioExist) {
+            return new JsonResponse(['data' => 'Usuario no existe'], JsonResponse::HTTP_CONFLICT);
+        }
+
+        $data = json_decode($request->getContent(),true);
+
+        empty($data['nombre']) ? true : $usaurioExist->setNombre($data['nombre']);
+        empty($data['apellido1']) ? true : $usaurioExist->setApellido1($data['apellido1']);
+        empty($data['apellido2']) ? true : $usaurioExist->setApellido2($data['apellido2']);
+        empty($data['email']) ? true : $usaurioExist->setEmail($data['email']);
+        empty($data['password']) ? true : $usaurioExist->setPassword($passwordHasher->hashPassword($usaurioExist, $data['password']));
+        empty($data['telefono']) ? true : $usaurioExist->setTelefono($data['telefono']);
+        empty($data['calle']) ? true : $usaurioExist->setCalle($data['calle']);
+        empty($data['numPortal']) ? true : $usaurioExist->setNumPortal($data['numPortal']);
+        empty($data['piso']) ? true : $usaurioExist->setPiso($data['piso']);
+        empty($data['codigoPostal']) ? true : $usaurioExist->setCodigoPostal($data['codigoPostal']);
+        empty($data['ciudad']) ? true : $usaurioExist->setCiudad($data['ciudad']);
+        empty($data['pais']) ? true : $usaurioExist->setPais($data['pais']);
+        empty($data['provincia']) ? true : $usaurioExist->setProvincia($data['provincia']);
+        
+        $this->entityManager->flush();
+
+        return new JsonResponse(['data' => 'Usuario Actualizado'], JsonResponse::HTTP_CREATED);
+            
+    }
+
 
     #[Route('/', name: 'app_redirect_to_login')]
     public function redirectToLogin(): Response
@@ -162,14 +195,29 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/api/usuario/validateToken', name: 'app_usuario_id', methods:['GET'])]
-    public function isTokeValid(): JsonResponse
+    public function isTokenValid(): JsonResponse
     {
         $user = $this->getUser();
 
         return new JsonResponse(['code' => 401, "message" => 'JWT Token is valid'], JsonResponse::HTTP_OK);
     }
 
-
+    #[Route('/api/usuario/quitarFoto', name: 'app_usuario_quitar_foto', methods:['DELETE'])]
+    public function quitarFoto(): JsonResponse
+    {
+        /** @var Usuario $usuario */
+        $usuario = $this->getUser();
+        if ($usuario->getFoto() != null) {
+            try {
+                unlink($this->getParameter('userimages_directory') . '/' . $usuario->getFoto());
+            } catch (\Throwable $th) {
+                
+            }
+        }
+        $usuario->setFoto(null);
+        $this->entityManager->flush();
+        return new JsonResponse(['data' => 'Foto eliminada'], JsonResponse::HTTP_OK);
+    }
     
 
     private function convertToJsonResponse($object):JsonResponse

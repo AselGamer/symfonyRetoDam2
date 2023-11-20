@@ -158,7 +158,13 @@ jQuery(window).on('load', function() {
     });
 
     jQuery('.botonBorrar').on('click', function() {
-        window.location.href = '/articulos/delete/' + articuloEliminar;
+        jQuery.ajax({
+            url: '/articulos/delete/' + articuloEliminar,
+            type: 'DELETE',
+            success: function(result) {
+                window.location.href = '/articulos';
+            }
+        });
     });
 
     jQuery('.botonBorrarMarca').on('click', function() {

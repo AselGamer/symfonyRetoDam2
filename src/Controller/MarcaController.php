@@ -77,7 +77,7 @@ class MarcaController extends AbstractController
         return $this->render('marca/add.html.twig');
     }
 
-    #[Route('/marcas/edit/{id}', name: 'app_marca_edit')]
+    #[Route('/marcas/edit/{id}', name: 'app_marca_edit', methods: ['GET', 'POST'])]
     public function editMarcas(int $id, Request $request): Response
     {
         $marca = $this->entityManager->getRepository(Marca::class)->find($id);
