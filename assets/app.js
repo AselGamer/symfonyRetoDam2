@@ -172,7 +172,7 @@ jQuery(window).on('load', function() {
     });
 
     jQuery('.botonBorrarPlataforma').on('click', function() {
-        window.location.href = '/plataforma/delete/' + articuloEliminar;
+        window.location.href = '/plataformas/delete/' + articuloEliminar;
     });
 
     jQuery('.botonBorrarEtiqueta').on('click', function() {

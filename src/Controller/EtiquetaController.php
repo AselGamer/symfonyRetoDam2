@@ -28,12 +28,66 @@ class EtiquetaController extends AbstractController
     #[Route('/etiqueta', name: 'app_etiqueta')]
     public function index(): Response
     {
+        return $this->redirectToRoute('app_etiqueta_lista', array('offset' => 1));
+    }
 
-        $etiquetas = $this->entityManager->getRepository(Etiqueta::class)->findAll();
+    #[Route('/etiqueta/pagina/', name: 'app_etiqueta_redirect')]
+    public function etiquetaRedirect(): Response
+    {
+        return $this->redirectToRoute('app_etiqueta_lista', array('offset' => 1));
+    }
 
-        $parametros = [
-            'etiquetas' => $etiquetas
-        ];
+    #[Route('/etiqueta/pagina/{offset}', name: 'app_etiqueta_lista')]
+    public function etiquetaLista($offset): Response
+    {
+        if ($offset <= 0) {
+            return $this->redirectToRoute('app_etiqueta_lista', array('offset' => 1));
+        }
+
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        
+        $totalEtiquetas = $qdb->select('count(e.idetiqueta)')
+            ->from(Etiqueta::class, 'e')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $cantPaginas = ceil($totalEtiquetas / 10);
+
+        $qdb->select('e')
+            ->setFirstResult(($offset - 1) * 10)
+            ->setMaxResults(10);
+
+        $etiquetas = $qdb->getQuery()->getResult();
+
+        $parametros['etiquetas'] = $etiquetas;
+        $parametros['paginas'] = $cantPaginas;
+
+        return $this->render('etiqueta/index.html.twig', $parametros);
+    
+    }
+
+    #[Route('/etiqueta/buscar/', name: 'app_etiqueta_buscar_redirect')]
+    public function etiquetaBuscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_etiqueta_lista', array('offset' => 1));
+    }
+
+    #[Route('/etiqueta/buscar/{busqueda}', name: 'app_etiqueta_buscar')]
+    public function etiquetaBuscar(string $busqueda): Response
+    {
+
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('e')
+            ->from(Etiqueta::class, 'e')
+            ->where('e.nombre LIKE :busqueda')
+            ->setParameter('busqueda', '%' . $busqueda . '%');
+
+        $etiquetas = $qdb->getQuery()->getResult();
+
+        $parametros['etiquetas'] = $etiquetas;
+        $parametros['paginas'] = 1;
 
         return $this->render('etiqueta/index.html.twig', $parametros);
     }

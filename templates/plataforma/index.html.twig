@@ -77,13 +77,13 @@
                </th>
            </tr>
        </thead>
-        <tbody>
+        <tbody class="tablaBuscar">
         {% for plataforma in plataformas %}
         <tr>
             <td>{{ plataforma.idPlataforma }}</td>
             <td>{{ plataforma.nombre }}</td>
             <td><div id="tdEditar"><a href="{{ path('app_plataforma_edit', {'id': plataforma.idPlataforma}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
-            <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start" id-eliminar="{{ plataforma.idPlataforma }}" type="submit">Borrar</button></div></td>
+            <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start btnDelete" id-eliminar="{{ plataforma.idPlataforma }}" type="submit">Borrar</button></div></td>
         </tr>
         {% endfor %}
         </tbody>
