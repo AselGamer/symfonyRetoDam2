@@ -19,16 +19,20 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 
 class UsuarioController extends AbstractController
 {
 
     private EntityManagerInterface $entityManager;
+    private JWTEncoderInterface $JWTEncoderInterface;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, JWTEncoderInterface $JWTEncoderInterface)
     {
         $this->entityManager = $entityManager;
+        $this->JWTEncoderInterface = $JWTEncoderInterface;
     }
 
     #[Route('/api/usuario', name: 'app_usuario', methods:['GET'])]
@@ -151,10 +155,20 @@ class UsuarioController extends AbstractController
         $datos['ciudad'] = $usuario->getCiudad();
         $datos['pais'] = $usuario->getPais();
         $datos['provincia'] = $usuario->getProvincia();
+        $datos['foto'] = $usuario->getFoto();
 
         
         return $this->convertToJsonResponse($datos);
     }
+
+    #[Route('/api/usuario/validateToken', name: 'app_usuario_id', methods:['GET'])]
+    public function isTokeValid(): JsonResponse
+    {
+        $user = $this->getUser();
+
+        return new JsonResponse(['code' => 401, "message" => 'JWT Token is valid'], JsonResponse::HTTP_OK);
+    }
+
 
     
 

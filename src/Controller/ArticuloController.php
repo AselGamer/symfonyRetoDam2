@@ -450,7 +450,7 @@ class ArticuloController extends AbstractController
         }
     }
 
-    #[Route('/articulos/buscar/', name: 'app_articulo_buscar_redirect', methods:['GET'])]
+    #[Route('/articulos/buscar', name: 'app_articulo_buscar_redirect', methods:['GET'])]
     public function ArticulosBuscarRedirect(): Response
     {
         return $this->redirectToRoute('app_articulo', array('offset' => 0));
@@ -496,11 +496,18 @@ class ArticuloController extends AbstractController
     {
         $datos = json_decode($request->getContent(), true);
 
-        $tipoArticulo = $datos['tipoArticulo'];
+        
+
+        
 
         $busqueda = $datos['busqueda'];
 
-        $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticulo($tipoArticulo, $busqueda);
+        if (empty($datos['tipoArticulo'])) {
+            $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticuloNoType($busqueda);
+        } else {
+            $tipoArticulo = $datos['tipoArticulo'];
+            $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticulo($tipoArticulo, $busqueda);
+        }
 
         return $this->convertToJson($articulos);   
     }
@@ -514,10 +521,17 @@ class ArticuloController extends AbstractController
 
         switch ($articulo->getTipoarticulo()) {
             case 'Consola':
-                array_push($datos, $this->entityManager->getRepository(Consola::class)->findOneBy(['idarticulo'=>$id]));
-                $plataformas = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(['idconsola'=>$datos[0]->getIdconsola()]);
+                $consola = $this->entityManager->getRepository(Consola::class)->findOneBy(['idarticulo'=>$id]);
+                array_push($datos, [
+                'idconsola'=>$consola->getIdconsola(), 
+                'modelo'=>$consola->getModelo(), 
+                'cantmandos'=>$consola->getCantmandos(), 
+                'almacenamiento'=>$consola->getAlmacenamiento(),
+                'idarticulo'=>$consola->getIdarticulo()]);
+                $plataformas = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(['idconsola'=>$consola->getIdconsola()]);
+                $datos[0]['plataformas'] = [];
                 foreach ($plataformas as $plataforma) {
-                    array_push($datos, $plataforma->getIdplataforma());
+                    array_push($datos[0]['plataformas'], $plataforma->getIdplataforma());
                 }
                 break;
             
@@ -526,10 +540,15 @@ class ArticuloController extends AbstractController
                 break;
             
             case 'Videojuego':
-                array_push($datos, $this->entityManager->getRepository(Videojuego::class)->findOneBy(['idarticulo'=>$id]));
-                $etiqueta = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(['idvideojuego'=>$datos[0]->getIdvideojuego()]);
+                $videoJuego = $this->entityManager->getRepository(Videojuego::class)->findOneBy(['idarticulo'=>$id]);
+                array_push($datos, [
+                'idvideojuego' => $videoJuego->getIdvideojuego(), 
+                'idplataforma' =>$videoJuego->getIdplataforma(), 
+                'idarticulo'=>$videoJuego->getIdarticulo()]);
+                $etiqueta = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(['idvideojuego'=>$videoJuego->getIdvideojuego()]);
+                $datos[0]['etiquetas'] = [];
                 foreach ($etiqueta as $etiqueta) {
-                    array_push($datos, $etiqueta->getIdetiqueta());
+                    array_push($datos[0]['etiquetas'], $etiqueta->getIdetiqueta());
                 }
                 break;
             default:
@@ -578,7 +597,7 @@ class ArticuloController extends AbstractController
         $marcas = $this->entityManager->getRepository(Marca::class)->findMarcaOfArticuloType($tipo);
 
         foreach ($marcas as $marca) {
-            $marcasArticulos[$marca->getNombre()] = $this->entityManager->getRepository(Articulo::class)->findBy(['idmarca'=>$marca->getIdmarca()]);
+            $marcasArticulos[$marca->getNombre()] = $this->entityManager->getRepository(VistaEntity::class)->findBy(['idmarca'=>$marca->getIdmarca(), 'tipoarticulo'=>$tipo]);
             if (sizeof($marcasArticulos[$marca->getNombre()]) == 0) {
                 unset($marcasArticulos[$marca->getNombre()]);
             }
@@ -587,7 +606,7 @@ class ArticuloController extends AbstractController
         return $this->convertToJson($marcasArticulos);
     }
 
-    #[Route('/api/articulos/etiquetas/', name: 'app_articulo_etiquetas_todos', methods:['GET'])]
+    #[Route('/api/articulos/etiquetas', name: 'app_articulo_etiquetas_todos', methods:['GET'])]
     public function buscarEtiquetasAll(): JsonResponse
     {
         $etiquetasArticulos = array();
@@ -604,7 +623,7 @@ class ArticuloController extends AbstractController
         return $this->convertToJson($etiquetasArticulos);
     }
 
-    #[Route('/api/articulos/tipo/', name: 'app_articulo_tipo_todos', methods:['GET'])]
+    #[Route('/api/articulos/tipos', name: 'app_articulo_tipo_todos', methods:['GET'])]
     public function buscarTipoAll(): JsonResponse
     {
         $tiposArticulos = array();
