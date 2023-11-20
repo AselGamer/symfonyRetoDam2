@@ -34,12 +34,79 @@ class TransaccionController extends AbstractController
     }
 
 
-    #[Route('/compra', name: 'app_compras')]
+    #[Route('/transaccion', name: 'app_compras')]
     public function index(): Response
     {
-        return $this->render('compras/index.html.twig', [
-            'controller_name' => 'ComprasController',
-        ]);
+        return $this->redirectToRoute('app_transacciones', ['offset'=>0]);
+    }
+
+    #[Route('/transaccion/pagina/{offset}', name: 'app_transacciones')]
+    public function transPagina(int $offset): Response
+    {
+        if ($offset <= 0) {
+            return $this->redirectToRoute('app_transacciones', array('offset' => 1));
+        }
+
+        $transacciones = $this->entityManager->getRepository(VistaTransaccion::class)->findAllOffsetWithMax($offset - 1);
+
+        $totalTrans = $this->entityManager->getRepository(VistaTransaccion::class)->countTransacciones();
+
+        $cantPaginas = ceil($totalTrans / 10);
+
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_transacciones', array('offset' => $cantPaginas));
+        }
+
+        $parametros['transacciones'] = $transacciones;
+
+        $parametros['paginas'] = $cantPaginas;
+
+        return $this->render('compras/index.html.twig', $parametros);
+    }
+
+    #[Route('/transaccion/buscar', name: 'app_transaccion_buscar_redirect', methods:['GET'])]
+    public function transBuscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_transacciones', array('offset' => 0));
+    }
+
+    #[Route('/transaccion/buscar/{busqueda}', name: 'app_transaccion_buscar', methods:['GET'])]
+    public function transBuscarPagina(string $busqueda): Response
+    {
+
+        $transacciones = $this->entityManager->getRepository(VistaTransaccion::class)->searchTransaccionPagina($busqueda);
+
+        $parametros['transacciones'] = $transacciones;
+
+        $parametros['paginas'] = 1;
+
+        return $this->render('compras/index.html.twig', $parametros);
+    }
+
+    #[Route('/transaccion/ver/{id}', name: 'app_transaccion_ver', methods:['GET'])]
+    public function transVer($id): Response
+    {
+        $transaccion = $this->entityManager->getRepository(VistaTransaccion::class)->findOneBy(['idtransaccion'=>$id]);
+        $parametros['transaccion'] = $transaccion;
+        if ($transaccion->getTipoTransaccion() == 'Compra') {
+            $tipoTrans = $this->entityManager->getRepository(Compra::class)->findOneBy(['idtransaccion'=>$id]);
+            $parametros['tipoTrans'] = $tipoTrans;
+        } else if ($transaccion->getTipoTransaccion() == 'Alquiler') {
+            $tipoTrans = $this->entityManager->getRepository(Alquiler::class)->findOneBy(['idtransaccion'=>$id]);
+            $parametros['tipoTrans'] = $tipoTrans;
+        } else {
+            return $this->redirectToRoute('app_compras');
+        }
+
+        $parametros['tipo'] = $transaccion->getTipoTransaccion();
+        
+
+        $detallesTransaccion = $this->entityManager->getRepository(Detalletransaccion::class)->findBy(['idtransaccion'=>$id]);
+        $parametros['detallesTransaccion'] = $detallesTransaccion;
+
+        
+
+        return $this->render('compras/ver.html.twig', $parametros);
     }
 
     #[Route('/api/transaccion/{tipo}', name: 'app_transacciones_api_usuario', methods:['GET'])]

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ver Producto{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <div class="row">
+        <div class="login-form bg-light mt-4 p-4">
+            <h1 class="h3 mb-3 font-weight-normal">Ver Producto</h1>
+            <div class="col-12">
+                <label class="viewLabel">Usuario Comprador</label>
+                <p class="viewData">{{ transaccion.idusuario.nombre }} {{ transaccion.idusuario.apellido1 }} {{ transaccion.idusuario.apellido2 }}</p>
+            </div>
+            <div class="col-12">
+                <label class="viewLabel">Latitud</label>
+                <p class="viewData">{{ transaccion.latitud }}</p>
+            </div>
+            <div class="col-12">
+                <label class="viewLabel">Longitud</label>
+                <p class="viewData">{{ transaccion.longitud }}</p>
+            </div>
+            <div class="col-12">
+                <label class="viewLabel">Latitud</label>
+                <p class="viewData">{{ transaccion.latitud }}</p>
+            </div>
+            {% if tipo == "Compra" %}
+                <div class="col-12">
+                    <label class="viewLabel">Fecha</label>
+                    <p class="viewData">{{ tipoTrans.fecha|date('Y-m-d') }}</p>
+                </div>
+            {% elseif tipo == "Alquiler" %}
+                <div class="col-12">
+                    <label class="viewLabel">Fecha Inicio</label>
+                    <p class="viewData">{{ tipoTrans.fechaInicio|date('Y-m-d') }}</p>
+                </div>
+                <div class="col-12">
+                    <label class="viewLabel">Fecha Fin</label>
+                    <p class="viewData">{{ tipoTrans.fechaFin|date('Y-m-d') }}</p>
+                </div>
+                <div class="col-12">
+                    <label class="viewLabel">Fecha Devolucion</label>
+                    <p class="viewData">{{ tipoTrans.fechaInicio|date('Y-m-d') }}</p>
+                </div>
+            {% endif %}
+            <div class="col-12">
+                <h4>Detalles</h4>
+                {% for detalle in detallesTransaccion %}
+                    <label class="viewLabel">Nombre</label>
+                    <p class="viewData">{{detalle.idarticulo.nombre}}</p>
+                    {% if tipo == "Compra" %}
+                        <label class="viewLabel">Precio</label>
+                        <p class="viewData">{{detalle.precioTotal}}€</p>
+                    {% endif %}
+                {% endfor %}
+                {% if tipo == "Alquiler" %}
+                    <div class="col-12">
+                        <label class="viewLabel">Precio Alquiler</label>
+                        <p class="viewData">{{ tipoTrans.precio }}€</p>
+                    </div>
+                {% endif %}
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='{{ path('app_compras') }}'">Volver</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

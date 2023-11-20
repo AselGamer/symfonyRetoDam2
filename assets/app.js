@@ -185,5 +185,10 @@ jQuery(window).on('load', function() {
         let valor = jQuery('.inputBuscarTodo').val();
         window.location.href = '/articulos/buscar/' + valor;
     });
+
+    jQuery('.btnBuscarTransacciones').on('click', function() {
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/transaccion/buscar/' + valor;
+    });
     
 });

@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use App\Entity\Usuario;
 use Doctrine\ORM\Mapping as ORM;
-
+use App\Repository\VistaTransaccionRepository;
 
 /**
  * ArticuloTypeView
  *
  * @ORM\Table(name="TransaccionTypeView")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=VistaTransaccionRepository::class)
  */
 class VistaTransaccion
 {
