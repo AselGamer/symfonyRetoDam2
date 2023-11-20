@@ -139,7 +139,7 @@ class ArticuloController extends AbstractController
                                        'error',
                                        $error
                                     );
-                                    return $this->redirectToRoute('app_articulo');
+                                    return $this->redirectToRoute('app_articulo', array('offset' => 1));
                                 } else {
                                     $paltaformaConsola->setIdplataforma($paltaforma);
                                     $this->entityManager->persist($paltaformaConsola);
@@ -148,11 +148,11 @@ class ArticuloController extends AbstractController
                                 
                             }
 
-                            return $this->redirectToRoute('app_articulo');
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         } else {
                             $this->entityManager->remove($articulo);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear la consola']);
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         }
                     } else {
                         $this->addFlash(
@@ -160,7 +160,7 @@ class ArticuloController extends AbstractController
                             $error
                         );
                         
-                        return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
+                        return $this->redirectToRoute('app_articulo', array('offset' => 1));
                     }
                     break;
                 case 'Dispositivo Movil':
@@ -177,7 +177,7 @@ class ArticuloController extends AbstractController
                         if ($error == "") {
                             $this->entityManager->persist($dispMovil);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulo');
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         } else {
                             
                             $this->entityManager->remove($articulo);
@@ -186,10 +186,10 @@ class ArticuloController extends AbstractController
                                'error',
                                $error
                             );
-                            return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el dispositivo']);
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         }
                     } else {
-                        return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
+                        return $this->redirectToRoute('app_articulo', array('offset' => 1));
                     }
                     break;
                 case 'VideoJuego':
@@ -215,27 +215,27 @@ class ArticuloController extends AbstractController
                                        'error',
                                        $error
                                     );
-                                    return $this->redirectToRoute('app_articulo');
+                                    return $this->redirectToRoute('app_articulo', array('offset' => 1));
                                 } else {
                                     $this->entityManager->persist($etiquetavideojuego);
                                     $this->entityManager->flush();
                                 }
                             }
-                            return $this->redirectToRoute('app_articulo');
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         } else {
                             $this->entityManager->remove($articulo);
                             $this->entityManager->flush();
-                            return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el videojuego']);
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         }
                     } else {
-                        return $this->redirectToRoute('app_articulo', ['error' => 'fallo al crear el producto']);
+                        return $this->redirectToRoute('app_articulo', array('offset' => 1));
                     }
                     break;
                 default:
 
                     break;
             }
-            return $this->redirectToRoute('app_articulo');
+            return $this->redirectToRoute('app_articulo', array('offset' => 1));
         } else {
             $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findAll();
             $parametros['etiquetas'] = $etiqueta;
@@ -262,7 +262,7 @@ class ArticuloController extends AbstractController
                 'error',
                 'No se puede eliminar el articulo porque tiene transacciones asociadas'
              );
-            return $this->redirectToRoute('app_articulo');
+            return $this->redirectToRoute('app_articulo', array('offset' => 1));
         }
 
         $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
@@ -291,7 +291,7 @@ class ArticuloController extends AbstractController
             unlink($this->getParameter('images_directory') . '/' . $imagenArticulo);
         }
 
-        return $this->redirectToRoute('app_articulo');
+        return $this->redirectToRoute('app_articulo', array('offset' => 1));
     }
 
     #[Route('/articulos/edit/{id}', name: 'app_articulo_edit', methods:['GET', 'POST'])]
@@ -318,7 +318,7 @@ class ArticuloController extends AbstractController
                     'error',
                     $error
                  );
-                return $this->redirectToRoute('app_articulo');
+                return $this->redirectToRoute('app_articulo', array('offset' => 1));
             }
             if (empty($_FILES['foto']['name'])) {
                 
@@ -367,7 +367,7 @@ class ArticuloController extends AbstractController
                                     $error
                                  );
                             }
-                            return $this->redirectToRoute('app_articulo');
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         } else {
                             $paltaformaConsola->setIdplataforma($paltaforma);
                             $this->entityManager->persist($paltaformaConsola);
@@ -398,7 +398,7 @@ class ArticuloController extends AbstractController
                                     $error
                                  );
                             }
-                            return $this->redirectToRoute('app_articulo');
+                            return $this->redirectToRoute('app_articulo', array('offset' => 1));
                         } else {
                             $this->entityManager->persist($etiquetavideojuego);
                             $this->entityManager->flush();
@@ -417,7 +417,7 @@ class ArticuloController extends AbstractController
                     $error
                  );
             }
-            return $this->redirectToRoute('app_articulo');
+            return $this->redirectToRoute('app_articulo', array('offset' => 1));
         } else {
             $datosExtraExtra = null;    
             switch ($vistaTipo->getTipoarticulo()) {
