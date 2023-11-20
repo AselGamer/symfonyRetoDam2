@@ -196,5 +196,11 @@ jQuery(window).on('load', function() {
         let valor = jQuery('.inputBuscarTodo').val();
         window.location.href = '/transaccion/buscar/' + valor;
     });
+
+    jQuery('.btnBuscarEmpleados').on('click', function() {
+        console.log('penes');
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/empleado/buscar/' + valor;
+    });
     
 });

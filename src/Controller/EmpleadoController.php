@@ -27,7 +27,7 @@ class EmpleadoController extends AbstractController
     public function index(): Response
     {
         if (is_null($this->security->getUser())) {
-            return $this->redirect('login');
+            return $this->redirectToRoute('app_empleado_login');
         }
 
         /** @var Empleado $empleado */
@@ -40,6 +40,78 @@ class EmpleadoController extends AbstractController
         ]);
     }
 
+    #[Route('/empleado/pagina/{offset}', name: 'app_empleado_lista')]
+    public function empleadoLista($offset): Response
+    {
+        if (is_null($this->security->getUser())) {
+            return $this->redirectToRoute('app_empleado_login');
+        } else {
+            /** @var Empleado $empleado */
+            $empleado = $this->security->getUser();
+            if ($empleado->isGerente() == false) {
+                return $this->redirectToRoute('app_empleado_login');
+            }
+        if ($offset <= 0) {
+            return $this->redirectToRoute('app_empleado', array('offset' => 1));
+        }
+        }
+
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('count(e.idempleado)')
+            ->from('App\Entity\Empleado', 'e');
+        $totalArticulos = $qdb->getQuery()->getSingleScalarResult();
+
+        $cantPaginas = ceil($totalArticulos / 10);
+
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_empleado', array('offset' => $cantPaginas));
+        }
+        
+        $qdb->select('a')
+            ->from('App\Entity\Empleado', 'a')
+            ->setFirstResult(($offset - 1) * 10)
+            ->setMaxResults(10);
+        $empleados = $qdb->getQuery()->getResult();
+        $parametros['empleados'] = $empleados;
+        $parametros['paginas'] = $cantPaginas;
+
+        return $this->render('empleado/list.html.twig', $parametros);
+    }
+
+    #[Route('/empleado/buscar/', name: 'app_empleado_buscar_redirect')]
+    public function empleadoBuscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_empleado_list');
+    }
+
+    #[Route('/empleado/buscar/{busqueda}', name: 'app_empleado_buscar')]
+    public function empleadoBuscar(string $busqueda): Response
+    {
+        if (is_null($this->security->getUser())) {
+            return $this->redirectToRoute('app_empleado_login');
+        } else {
+            /** @var Empleado $empleado */
+            $empleado = $this->security->getUser();
+            if ($empleado->isGerente() == false) {
+                return $this->redirectToRoute('app_empleado_login');
+            }
+        }
+
+        $qdb = $this->entityManager->createQueryBuilder();
+        $qdb->select('a')
+            ->from('App\Entity\Empleado', 'a')
+            ->where('a.nombre LIKE :busqueda')
+            ->orWhere('a.apellido1 LIKE :busqueda')
+            ->orWhere('a.apellido2 LIKE :busqueda')
+            ->orWhere('a.email LIKE :busqueda')
+            ->setParameter('busqueda', '%' . $busqueda . '%');
+        $empleados = $qdb->getQuery()->getResult();
+        $parametros['empleados'] = $empleados;
+        $parametros['paginas'] = 1;
+
+        return $this->render('empleado/list.html.twig', $parametros);
+    }
 
     #[Route('/login', name: 'app_empleado_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -123,18 +195,16 @@ class EmpleadoController extends AbstractController
     public function empleadoList(): Response
     {
         if (is_null($this->security->getUser())) {
-            return $this->redirect('login');
+            return $this->redirectToRoute('app_empleado_login');
         } else {
             /** @var Empleado $empleado */
             $empleado = $this->security->getUser();
             if ($empleado->isGerente() == false) {
-                return $this->redirect('login');
+                return $this->redirectToRoute('app_empleado_login');
             }
         }
 
-        $empleados = $this->entityManager->getRepository(Empleado::class)->findAll();
-        $parametros['empleados'] = $empleados;
 
-        return $this->render('empleado/list.html.twig', $parametros);
+        return $this->redirectToRoute('app_empleado_lista', array('offset' => 1));
     }
 }
