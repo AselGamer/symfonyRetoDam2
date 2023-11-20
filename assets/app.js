@@ -171,6 +171,14 @@ jQuery(window).on('load', function() {
         window.location.href = '/marcas/delete/' + articuloEliminar;
     });
 
+    jQuery('.botonBorrarPlataforma').on('click', function() {
+        window.location.href = '/plataforma/delete/' + articuloEliminar;
+    });
+
+    jQuery('.botonBorrarEtiqueta').on('click', function() {
+        window.location.href = '/etiqueta/delete/' + articuloEliminar;
+    });
+
  
 
     jQuery('.btnBuscarTabla').on('click', function() {
@@ -190,6 +198,26 @@ jQuery(window).on('load', function() {
     jQuery('.btnBuscarArticulos').on('click', function() {
         let valor = jQuery('.inputBuscarTodo').val();
         window.location.href = '/articulos/buscar/' + valor;
+    });
+
+    jQuery('.btnBuscarMarcas').on('click', function() {
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/marcas/buscar/' + valor;
+    });
+
+    jQuery('.btnBuscarPlataformas').on('click', function() {
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/plataforma/buscar/' + valor;
+    });
+
+    jQuery('.btnBuscarEtiquetas').on('click', function() {
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/etiqueta/buscar/' + valor;
+    });
+
+    jQuery('.btnBuscarReparaciones').on('click', function() {
+        let valor = jQuery('.inputBuscarTodo').val();
+        window.location.href = '/reparacion/buscar/' + valor;
     });
 
     jQuery('.btnBuscarTransacciones').on('click', function() {

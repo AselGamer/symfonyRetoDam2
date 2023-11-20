@@ -6,13 +6,59 @@
 
 
 {% block body %}
-    <h1 class="m-3">Plataformas</h1>
+    <h1 class="m-2 d-flex justify-content-center">Plataformas</h1>
 
-    {% if error %}
-        <div>
-            <h2>{{ error }}</h2>
+    <div class="align-self-end">
+            <div class=" d-flex flex-row justify-content-end align-items-end">
+
+                <div class="col-md-8">
+
+                <div class="search d-flex flex-row justify-content-end align-items-center">
+                    <i class="fa fa-search"></i>
+                    <input type="text" class="form-control inputBuscarTodo h-auto" placeholder="Buscar todos las plataformas">
+                    <button class="btn btn-primary btnBuscarPlataformas btnControl h-auto">Buscar</button>
+                </div>
+                
+                </div>
+                
+            </div>
         </div>
-    {% endif %}
+
+
+    <div class="align-self-end">
+        <div class=" d-flex flex-row justify-content-end align-items-end">
+
+            <div class="col-md-8">
+
+            <div class="search d-flex flex-row justify-content-end align-items-center">
+                <i class="fa fa-search"></i>
+                <input type="text" class="form-control inputBuscarTabla w-50" placeholder="Buscar en esta tabla">
+                <button class="btn btn-primary btnBuscarTabla btnControl">Buscar</button>
+            </div>
+            
+            </div>
+            
+        </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Atencion!</h5>
+                </div>
+                <div class="modal-body">
+                    <h5>¿Estas seguro de que quieres borrar esta plataforma?</h5>
+                    <h5>Esta accion no se puede deshacer</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger botonBorrarPlataforma">Eliminar</button>
+                    <button type="button" class="btn btn-primary closeModal" >Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <table class = "text-center table table-bordered">
        <thead>
@@ -37,11 +83,22 @@
             <td>{{ plataforma.idPlataforma }}</td>
             <td>{{ plataforma.nombre }}</td>
             <td><div id="tdEditar"><a href="{{ path('app_plataforma_edit', {'id': plataforma.idPlataforma}) }}"><button class="btn btn-lg btn-primary float-start">Editar</button></a></div></td>
-            <td><div id="tdEliminar"><form action="{{ path('app_plataforma_delete', {'id': plataforma.idPlataforma}) }}" method="post"><button class="btn btn-lg btn-primary float-start" type="submit">Borrar</button></form></div></td>
+            <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start" id-eliminar="{{ plataforma.idPlataforma }}" type="submit">Borrar</button></div></td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
+    {% if paginas > 1 %}
+        <nav aria-label="Seleccione una pagina">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link text-dark" href="{{ path('app_plataforma_paginas', {'offset': app.request.get('offset') - 1}) }}">Anterior</a></li>
+                {% for i in 1..paginas %}
+                    <li class="page-item"><a class="page-link text-dark" href="{{ path('app_plataforma_paginas', {'offset': i}) }}">{{ i }}</a></li>
+                {% endfor %}
+                <li class="page-item"><a class="page-link text-dark" href="{{ path('app_plataforma_paginas', {'offset': app.request.get('offset') + 1}) }}">Siguiente</a></li>
+            </ul>
+        </nav>
+    {% endif %}
 
         <a href="{{ path('app_plataforma_add') }}" >
             <button class="btn btn-lg btn-primary float-start m-3">Añadir Plataforma</button>

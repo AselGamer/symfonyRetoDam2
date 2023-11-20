@@ -59,6 +59,25 @@ class MarcaController extends AbstractController
         return $this->redirectToRoute('app_marca', ['offset' => 1]);
     }
 
+    #[Route('/marcas/buscar/', name: 'app_marca_buscar_redirect')]
+    public function buscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_marca', ['offset' => 1]);
+    }
+
+    #[Route('/marcas/buscar/{busqueda}', name: 'app_marca_buscar')]
+    public function buscarMarca(string $busqueda): Response
+    {
+
+        $marcas = $this->entityManager->getRepository(Marca::class)->findBy(array('nombre' => $busqueda));
+
+        $parametros['marcas'] = $marcas;
+
+        $parametros['paginas'] = 1;
+
+        return $this->render('marca/index.html.twig', $parametros);
+    }
+
     #[Route('/marcas/add', name: 'app_marca_add')]
     public function addMarcas(Request $request): Response
     {

@@ -40,6 +40,12 @@ class EmpleadoController extends AbstractController
         ]);
     }
 
+    #[Route('/empleado/pagina/', name: 'app_empleado_redirect')]
+    public function empleadoRedirect(): Response
+    {
+        return $this->redirectToRoute('app_empleado_lista', array('offset' => 1));
+    }
+
     #[Route('/empleado/pagina/{offset}', name: 'app_empleado_lista')]
     public function empleadoLista($offset): Response
     {
@@ -68,8 +74,7 @@ class EmpleadoController extends AbstractController
             return $this->redirectToRoute('app_empleado', array('offset' => $cantPaginas));
         }
         
-        $qdb->select('a')
-            ->from('App\Entity\Empleado', 'a')
+        $qdb->select('e')
             ->setFirstResult(($offset - 1) * 10)
             ->setMaxResults(10);
         $empleados = $qdb->getQuery()->getResult();

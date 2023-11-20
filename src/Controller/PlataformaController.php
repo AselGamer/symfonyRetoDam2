@@ -28,15 +28,70 @@ class PlataformaController extends AbstractController
     #[Route('/plataforma', name: 'app_plataforma')]
     public function index(): Response
     {
-        $error = false;
-        $parametros['error'] = false;
-        if ($error) {
-            $parametros['error'] = $error;
+        return $this->redirectToRoute('app_plataforma_paginas', array('offset' => 1));
+    }
+
+    #[Route('/plataforma/paginas/', name: 'app_plataforma_redirect')]
+    public function plataformaRedirect(): Response
+    {
+        return $this->redirectToRoute('app_plataforma_paginas', array('offset' => 1));
+    }
+
+    #[Route('/plataforma/paginas/{offset}', name: 'app_plataforma_paginas')]
+    public function plataformaPaginas(int $offset): Response
+    {
+        
+        if ($offset <= 0) {
+            return $this->redirectToRoute('app_plataforma_paginas', array('offset' => 1));
         }
 
-        $plataformas = $this->entityManager->getRepository(Plataforma::class)->findAll();
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $cantPlataformas = $qdb->select('count(a.idplataforma)')
+            ->from('App\Entity\Plataforma', 'a')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $cantPaginas = ceil($cantPlataformas / 10);
+
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_plataforma_paginas', array('offset' => $cantPaginas));
+        }
+
+
+        $qdb->select('a')
+            ->setFirstResult(($offset - 1) * 10)
+            ->setMaxResults(10);
+
+
+        $plataformas = $qdb->getQuery()->getResult();
 
         $parametros['plataformas'] = $plataformas;
+        $parametros['paginas'] = $cantPaginas;
+
+        return $this->render('plataforma/index.html.twig', $parametros);
+    }
+
+    #[Route('/plataforma/buscar/', name: 'app_plataforma_buscar_redirect')]
+    public function plataformaBuscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_plataforma');
+    }
+
+    #[Route('/plataforma/buscar/{busqueda}', name: 'app_plataforma_buscar')]
+    public function plataformaBuscar(string $busqueda): Response
+    {
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('a')
+            ->from('App\Entity\Plataforma', 'a')
+            ->where('a.nombre LIKE :busqueda')
+            ->setParameter('busqueda', '%' . $busqueda . '%');
+
+        $plataformas = $qdb->getQuery()->getResult();
+
+        $parametros['plataformas'] = $plataformas;
+        $parametros['paginas'] = 1;
 
         return $this->render('plataforma/index.html.twig', $parametros);
     }
