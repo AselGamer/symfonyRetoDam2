@@ -496,11 +496,18 @@ class ArticuloController extends AbstractController
     {
         $datos = json_decode($request->getContent(), true);
 
-        $tipoArticulo = $datos['tipoArticulo'];
+        
+
+        
 
         $busqueda = $datos['busqueda'];
 
-        $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticulo($tipoArticulo, $busqueda);
+        if (empty($datos['tipoArticulo'])) {
+            $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticuloNoType($busqueda);
+        } else {
+            $tipoArticulo = $datos['tipoArticulo'];
+            $articulos = $this->entityManager->getRepository(VistaEntity::class)->searchArticulo($tipoArticulo, $busqueda);
+        }
 
         return $this->convertToJson($articulos);   
     }

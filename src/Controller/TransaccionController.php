@@ -104,14 +104,14 @@ class TransaccionController extends AbstractController
         return $this->convertToJson($datos);
     }
 
-    #[Route('/api/transaccion/{id}', name: 'app_transacciones_api_id', methods:['GET'])]
+    #[Route('/api/transaccion/ver/{id}', name: 'app_transacciones_api_id', methods:['GET'])]
     public function viewTransaccion($id): JsonResponse
     {
         $usuario = $this->getUser();
 
         $transaccion = $this->entityManager->getRepository(VistaTransaccion::class)->findOneBy(['idtransaccion'=>$id]);
 
-        if ($usuario != $transaccion->getIdusuario()) {
+        if ($usuario != $transaccion->getIdusuario() || $usuario == null) {
             return new JsonResponse(['data' => 'No tienes permisos para ver esta transacción'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
@@ -162,7 +162,7 @@ class TransaccionController extends AbstractController
         $usuario = $this->getUser();
         $datos = json_decode($request->getContent(), true);
 
-        if (empty($datos['latitud']) || empty($datos['longitud']) || empty($datos['detalles'] || empty($datos['tipo_transaccion']))) {
+        if (empty($datos['latitud']) || empty($datos['longitud']) || empty($datos['detalles']) || empty($datos['tipo_transaccion'])) {
             return new JsonResponse(['data' => 'Faltan datos'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
@@ -194,7 +194,7 @@ class TransaccionController extends AbstractController
         foreach ($datos['detalles'] as $detalle) {
             $detalleTransaccion = new Detalletransaccion();
             $detalleTransaccion->setIdtransaccion($transaccion);
-            $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo'=>$detalle['idproducto']));
+            $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo'=>$detalle['idarticulo']));
             if ($articulo->getStock() < 1 && $datos['tipo_transaccion'] == 'Compra') {
                 return new JsonResponse(['data' => 'No hay stock suficiente'], JsonResponse::HTTP_BAD_REQUEST);
             } else if($datos['tipo_transaccion'] == 'Compra' && $articulo->getStock() >= 1)
@@ -209,7 +209,7 @@ class TransaccionController extends AbstractController
                 $articulo->setStockAlquiler($articulo->getStockAlquiler() - 1);
             }
             $detalleTransaccion->setIdarticulo($articulo);
-            $detalleTransaccion->setPrecioTotal($detalle['precio_total']);
+            $detalleTransaccion->setPrecioTotal($articulo->getPrecio());
             $this->entityManager->persist($detalleTransaccion);
         }
 
