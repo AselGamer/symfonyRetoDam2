@@ -6,8 +6,40 @@
 
 
 {% block body %}
-    <h1 class="m-3">Reparaciones</h1>
+    <h1 class="m-2 d-flex justify-content-center">Reparaciones</h1>
 
+    <div class="align-self-end">
+            <div class=" d-flex flex-row justify-content-end align-items-end">
+
+                <div class="col-md-8">
+
+                <div class="search d-flex flex-row justify-content-end align-items-center">
+                    <i class="fa fa-search"></i>
+                    <input type="text" class="form-control inputBuscarTodo h-auto" placeholder="Buscar todos las reparaciones">
+                    <button class="btn btn-primary btnBuscarReparaciones btnControl h-auto">Buscar</button>
+                </div>
+                
+                </div>
+                
+            </div>
+        </div>
+
+
+    <div class="align-self-end">
+        <div class=" d-flex flex-row justify-content-end align-items-end">
+
+            <div class="col-md-8">
+
+            <div class="search d-flex flex-row justify-content-end align-items-center">
+                <i class="fa fa-search"></i>
+                <input type="text" class="form-control inputBuscarTabla w-50" placeholder="Buscar en esta tabla">
+                <button class="btn btn-primary btnBuscarTabla btnControl">Buscar</button>
+            </div>
+            
+            </div>
+            
+        </div>
+    </div>
 
     <table class = "text-center table table-bordered">
        <thead>
@@ -44,7 +76,7 @@
                </th>
            </tr>
        </thead>
-        <tbody>
+        <tbody class="tablaBuscar">
         {% for reparacion in reparaciones %}
             <tr>
             <td>{{ reparacion.idreparacion }}</td>
@@ -81,6 +113,17 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if paginas > 1 %}
+        <nav aria-label="Seleccione una pagina">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link text-dark" href="{{ path('app_reparacion_pagina', {'offset': app.request.get('offset') - 1}) }}">Anterior</a></li>
+                {% for i in 1..paginas %}
+                    <li class="page-item"><a class="page-link text-dark" href="{{ path('app_reparacion_pagina', {'offset': i}) }}">{{ i }}</a></li>
+                {% endfor %}
+                <li class="page-item"><a class="page-link text-dark" href="{{ path('app_reparacion_pagina', {'offset': app.request.get('offset') + 1}) }}">Siguiente</a></li>
+            </ul>
+        </nav>
+    {% endif %}
 
 
 {% endblock %}

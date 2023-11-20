@@ -58,7 +58,7 @@ class EmpleadoController extends AbstractController
                 return $this->redirectToRoute('app_empleado_login');
             }
         if ($offset <= 0) {
-            return $this->redirectToRoute('app_empleado', array('offset' => 1));
+            return $this->redirectToRoute('app_empleado_lista', array('offset' => 1));
         }
         }
 
@@ -71,7 +71,7 @@ class EmpleadoController extends AbstractController
         $cantPaginas = ceil($totalArticulos / 10);
 
         if ($offset > $cantPaginas) {
-            return $this->redirectToRoute('app_empleado', array('offset' => $cantPaginas));
+            return $this->redirectToRoute('app_empleado_lista', array('offset' => $cantPaginas));
         }
         
         $qdb->select('e')

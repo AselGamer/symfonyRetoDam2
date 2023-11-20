@@ -30,8 +30,74 @@ class ReparacionController extends AbstractController
     #[Route('/reparacion', name: 'app_reparacion')]
     public function index(): Response
     {
-        $reparaciones = $this->entityManager->getRepository(Reparacion::class)->findAll();
+        return $this->redirectToRoute('app_reparacion_pagina', array('offset' => 1));
+    }
+
+    #[Route('/reparacion/pagina/', name: 'app_reparacion_redirect')]
+    public function reparacionRedirect(): Response
+    {
+        return $this->redirectToRoute('app_reparacion_pagina', array('offset' => 1));
+    }
+
+    #[Route('/reparacion/pagina/{offset}', name: 'app_reparacion_pagina')]
+    public function paginaReparacion(int $offset): Response
+    {
+        if ($offset <= 0) {
+            return $this->redirectToRoute('app_reparacion_pagina', array('offset' => 1));
+        }
+
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('count(r.idreparacion)')
+            ->from(Reparacion::class, 'r');
+
+        $cantReparaciones = $qdb->getQuery()->getSingleScalarResult();
+
+        $cantPaginas = ceil($cantReparaciones / 10);
+
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_reparacion_pagina', array('offset' => $cantPaginas));
+        }
+
+        $qdb->select('r')
+            ->setFirstResult(($offset - 1) * 10)
+            ->setMaxResults(10);
+        $reparaciones = $qdb->getQuery()->getResult();
+
         $parametros['reparaciones'] = $reparaciones;
+        $parametros['paginas'] = $cantPaginas;
+
+        return $this->render('reparacion/index.html.twig', $parametros);
+    }
+
+    #[Route('/reparacion/buscar/', name: 'app_reparacion_buscar_redirect')]
+    public function plataformaBuscarRedirect(): Response
+    {
+        return $this->redirectToRoute('app_reparacion');
+    }
+
+    #[Route('/reparacion/buscar/{busqueda}', name: 'app_reparacion_buscar')]
+    public function plataformaBuscar(string $busqueda): Response
+    {
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('a')
+            ->from(Reparacion::class, 'a')
+            ->innerJoin('a.idusuario', 'u')
+            ->innerJoin('a.idestadoreparacion', 'e')
+            ->where('a.problema LIKE :busqueda')
+            ->orWhere('a.comentarioReparacion LIKE :busqueda')
+            ->orWhere('a.fechaInicio LIKE :busqueda')
+            ->orWhere('a.fechaFin LIKE :busqueda')
+            ->orWhere('a.precio LIKE :busqueda')
+            ->orWhere('u.nombre LIKE :busqueda')
+            ->orWhere('e.nombre LIKE :busqueda')
+            ->setParameter('busqueda', '%' . $busqueda . '%');
+
+        $reparaciones = $qdb->getQuery()->getResult();
+
+        $parametros['reparaciones'] = $reparaciones;
+        $parametros['paginas'] = 1;
 
         return $this->render('reparacion/index.html.twig', $parametros);
     }

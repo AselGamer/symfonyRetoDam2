@@ -54,6 +54,10 @@ class EtiquetaController extends AbstractController
 
         $cantPaginas = ceil($totalEtiquetas / 10);
 
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_etiqueta_lista', array('offset' => $cantPaginas));
+        }
+
         $qdb->select('e')
             ->setFirstResult(($offset - 1) * 10)
             ->setMaxResults(10);

@@ -40,6 +40,10 @@ class MarcaController extends AbstractController
 
         $cantPaginas = ceil($totalMarcas / 10);
 
+        if ($offset > $cantPaginas) {
+            return $this->redirectToRoute('app_marca', array('offset' => $cantPaginas));
+        }
+
         $parametros['paginas'] = $cantPaginas;
 
         if ($offset > $parametros['paginas']) {
