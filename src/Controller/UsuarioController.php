@@ -75,7 +75,7 @@ class UsuarioController extends AbstractController
         }
     }
 
-    #[Route('/api/usuario/actualizar', name: 'app_usuario_actualizar', methods:['POST'])]
+    #[Route('/api/usuario/actualizar', name: 'app_usuario_actualizar', methods:['PUT'])]
     public function actualizarUsuario(Request $request, UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface): JsonResponse
     {
 
