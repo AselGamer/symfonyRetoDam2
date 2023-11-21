@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Producto{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <div class="row">
+        <div class="login-form bg-light mt-4 p-4">
+            <form method="get" class="row g-3" enctype='multipart/form-data' action="{{ path('app_articulo', {'offset': 1}) }}">
+                <h1 class="h3 mb-3 font-weight-normal">Editar Articulo</h1>
+                <div class="col-12">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" value="{{ articulo.nombre }}" required disabled>
+                </div>
+                <div class="col-12">
+                    <label for="precio">Precio</label>
+                    <input type="number" name="precio" id="precio" class="form-control" value="{{ articulo.precio }}" required disabled>
+                </div>
+                <div class="col-12">
+                    <label for="stock">Stock</label>
+                    <input type="number" name="stock" id="stock" class="form-control" value="{{ articulo.stock }}" required disabled>
+                </div>
+                <div class="col-12">
+                    <label for="stock_alquiler">Stock Alquiler</label>
+                    <input type="number" name="stock_alquiler" id="stock_alquiler" class="form-control" value="{{ articulo.stockAlquiler }}" required disabled>
+                </div>
+                <div class="col-12">
+                    <label for="foto">Foto</label>
+                    <img class="imgVer" src="/images/{{ articulo.foto }}"></img>
+                </div>
+                <div class="col-12">
+                    <label for="idMarca">Marca</label>
+                    <select name="idMarca" id="idMarca" class="form-select" required disabled>
+                        {% for marca in marcas %}
+                            {% if marca == articulo.idmarca %}
+                                <option value="{{ marca.idMarca }}" selected>{{ marca.nombre }}</option>
+                            {% else %}
+                                <option value="{{ marca.idMarca }}">{{ marca.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="tipo">Tipo Producto</label>
+                    <select name="tipo" id="tipo" class="form-select" required disabled>
+                        <option name="{{ tipo }}" class="form-select">
+                        {% if tipo == "DispositivoMovil" %}
+                            Dispositivo Movil
+                        {% else %}
+                            {{ tipo }}
+                        {% endif %}
+                        </option>
+                    </select>
+                </div>
+
+                {% if tipo == "DispositivoMovil" %}
+                    <div id="dispositivo">
+                        <div class="col-12">
+                            <label for="almacenamiento">Almacenamiento</label>
+                            <input type="text" name="almacenamiento" id="alamcenamiento" class="form-control" value="{{datosExtra.almacenamiento}}" disabled>
+                        </div>
+                        <div class="col-12">
+                            <label for="ram">RAM (en GB)</label>
+                            <input type="text" name="ram" id="ram" class="form-control" value="{{datosExtra.ram}}" disabled>
+                        </div>
+                        <div class="col-12">
+                            <label for="pantalla">Tamano Pantalla (en Pulgadas)</label>
+                            <input type="text" name="pantalla" id="pantalla" class="form-control" value="{{datosExtra.tamanoPantalla}}" disabled>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if tipo == "Consola" %}
+                    <div id="consola">
+                        <div class="col-12">
+                            <label for="modelo">Modelo</label>
+                            <input type="text" name="modelo" id="modelo" class="form-control" value="{{datosExtra.modelo}}" disabled>
+                        </div>
+                        <div class="col-12">
+                            <label for="cant_mandos">Cantidad de Mandos</label>
+                            <input type="number" name="cant_mandos" id="cant_mandos" class="form-control" value="{{datosExtra.cantMandos}}" disabled>
+                        </div>
+                        <div class="col-12">
+                            <label for="almacenamientoConsola">Almacenamiento</label>
+                            <input type="text" name="almacenamientoConsola" id="alamcenamientoConsola" class="form-control" value="{{datosExtra.almacenamiento}}" disabled>
+                        </div>
+                        {% if datosExtraExtra != null %}
+                        {% set count = 1 %}
+                            <div class="col-12" id="plataformas">
+                            <h3>Plataformas</h3>
+                            {% for plataformaExtra in datosExtraExtra %}
+                                <div id="contPlataformas">
+                                    <div class="plataformaPlantilla">
+                                    </br>
+                                        <div class="plataformaPlantillaInner">
+                                            <select name="plataformas[]" class="form-select" disabled>
+                                            {% for plataforma in plataformas %}
+                                                {% if plataformaExtra.idPlataforma.idPlataforma == plataforma.idPlataforma %}
+                                                    <option value="{{ plataforma.idPlataforma }}" selected>{{ plataforma.nombre }}</option>
+                                                    {% else %}
+                                                    <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% set count = count + 1 %}
+                            {% endfor %}
+                    </div>
+                        {% else %}
+                            <div class="col-12" id="plataformas">
+                            <h3>Plataformas</h3>
+                            <div id="contPlataformas">
+                                <div class="plataformaPlantilla">
+                                    <div class="plataformaPlantillaInner">
+                                        <select name="plataformas[]" class="form-select" disabled>
+                                        {% for plataforma in plataformas %}
+                                            <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        <button type="button" class="btn btn-secondary btnAddPlataforma">+</button>
+                    </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if tipo == "Videojuego" %}
+                    <div id="juego">
+                        <div class="col-12">
+                            <label for="plataforma">Plataforma</label>
+                            <select name="plataforma" id="plataforma" class="form-select" disabled>
+                            {% for plataforma in plataformas %}
+                                {% if datosExtra.idPlataforma.idPlataforma == plataforma.idPlataforma %}
+                                    <option value="{{ plataforma.idPlataforma }}" selected>{{ plataforma.nombre }}</option>
+                                {% else %}
+                                    <option value="{{ plataforma.idPlataforma }}">{{ plataforma.nombre }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        </div>
+                        {% if datosExtraExtra != null %}
+                        {% set count = 1 %}
+                        <div class="col-12" id="etiqueta">
+                            <label>Etiquetas</label>
+                            {% for etiquetaExtra in datosExtraExtra %}
+                            <div id="contEtiqueta">
+                                <div class="etiquetaPlantilla">
+                                    </br>
+                                    <div class="etiquetaPlantillaInner">
+                                        <select name="etiquetas[]" class="form-select" disabled>
+                                        {% for etiqueta in etiquetas %}
+                                            {% if etiquetaExtra.idEtiqueta.idEtiqueta == etiqueta.idEtiqueta %}
+                                                <option value="{{ etiqueta.idEtiqueta }}" selected>{{ etiqueta.nombre }}</option>
+                                                {% else %}
+                                                <option value="{{ etiqueta.idEtiqueta }}">{{ etiqueta.nombre }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            {% set count = count + 1 %}
+                            {% endfor %}
+                        {% endif %}
+                        
+                    </div>
+                </div>
+                {% endif %}
+                
+
+                
+                <div class="col-12">
+                <br>
+                    <button class="btn btn-lg btn-primary float-end">
+                        Volver
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

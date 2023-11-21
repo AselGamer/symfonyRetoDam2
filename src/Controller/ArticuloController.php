@@ -455,6 +455,49 @@ class ArticuloController extends AbstractController
         }
     }
 
+    #[Route('/articulos/ver/{id}', name: 'app_articulo_show', methods:['GET'])]
+    public function verArticuloPagina(int $id, SluggerInterface $sluggerInterface, Request $request): Response
+    {
+
+        $error = "";
+
+        $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
+
+        $parametros['articulo'] = $articulo;
+    
+        $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
+    
+        $parametros['tipo'] = $vistaTipo->getTipoarticulo();
+        $datosExtraExtra = null;
+
+        switch ($vistaTipo->getTipoarticulo()) {
+            case 'Consola':
+                $datosExtra = $this->entityManager->getRepository(Consola::class)->findOneBy(array('idconsola' => $vistaTipo->getIdtipoClase()));
+                $datosExtraExtra = $this->entityManager->getRepository(Plataformaconsola::class)->findBy(array('idconsola' => $vistaTipo->getIdtipoClase()));
+                break;
+            case 'DispositivoMovil':
+                $datosExtra = $this->entityManager->getRepository(Dispositivomovil::class)->findOneBy(array('iddispositivomovil' => $vistaTipo->getIdtipoClase()));
+                break;
+            case 'Videojuego':
+                $datosExtra = $this->entityManager->getRepository(Videojuego::class)->findOneBy(array('idvideojuego' => $vistaTipo->getIdtipoClase()));
+                $datosExtraExtra = $this->entityManager->getRepository(Etiquetavideojuego::class)->findBy(array('idvideojuego' => $vistaTipo->getIdtipoClase()));
+                break;
+            default:
+                $datosExtra = null;
+                break;
+        }
+        
+        $parametros['datosExtra'] = $datosExtra;
+        $parametros['datosExtraExtra'] = $datosExtraExtra;
+        $marcas = $this->entityManager->getRepository(Marca::class)->findAll();
+        $parametros['marcas'] = $marcas;
+        $plataformas = $this->entityManager->getRepository(Plataforma::class)->findAll();
+        $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->findAll();
+        $parametros['etiquetas'] = $etiqueta;
+        $parametros['plataformas'] = $plataformas;
+        return $this->render('articulos/ver.html.twig', $parametros);
+    }
+
     #[Route('/articulos/buscar', name: 'app_articulo_buscar_redirect', methods:['GET'])]
     public function ArticulosBuscarRedirect(): Response
     {

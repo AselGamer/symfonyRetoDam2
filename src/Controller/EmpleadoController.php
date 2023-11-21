@@ -212,4 +212,45 @@ class EmpleadoController extends AbstractController
 
         return $this->redirectToRoute('app_empleado_lista', array('offset' => 1));
     }
+
+    #[Route('/empleado/editar/{id}', name: 'app_empleado_edit', methods:['GET','POST'])]
+    public function empleadoEdit($id, UserPasswordHasherInterface $passwordHasher): Response
+    {
+
+        /** @var Empleado $empleado */
+        $empleado = $this->getUser();
+        if ($empleado == null) {
+            return $this->redirectToRoute('app_empleado_lista', array('offset' => 1));
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            empty($_POST['newPassword']) ? $error = false : $empleado->setPassword($passwordHasher->hashPassword($empleado, $_POST['newPassword']));
+            empty($_POST['nombre']) ? $error = true : $nombre = $_POST['nombre'];
+            empty($_POST['apellido1']) ? $error = true : $apellido = $_POST['apellido1'];
+            empty($_POST['apellido2']) ? $error = true : $apellido2 = $_POST['apellido2'];
+            empty($_POST['email']) ? $error = true : $email = $_POST['email'];
+            $gerente = filter_var($_POST['gerente'], FILTER_VALIDATE_BOOLEAN);
+
+            if ($error) {
+                $this->addFlash('error', 'Error: Debes rellenar todos los campos');
+                return $this->render('empleado/edit.html.twig', [
+                    'empleado' => $empleado
+                ]);
+            } else {
+                $empleado->setNombre($nombre);
+                $empleado->setApellido1($apellido);
+                $empleado->setApellido2($apellido2);
+                $empleado->setEmail($email);
+                $empleado->setGerente($gerente);
+                $this->entityManager->persist($empleado);
+                $this->entityManager->flush();
+                return $this->redirectToRoute('app_empleado_lista', array('offset' => 1));
+            }
+        }
+
+        return $this->render('empleado/editar.html.twig', [
+            'empleado' => $empleado,
+        ]);
+    }
 }

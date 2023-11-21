@@ -47,6 +47,13 @@ class VistaEntity
     /**
      * @var int
      *
+     * @ORM\Column(name="stock_alquiler", type="integer", nullable=false)
+     */
+    private $stockalquiler;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="stock", type="integer", nullable=false)
      */
     private $stock;
@@ -218,5 +225,21 @@ class VistaEntity
         $this->idtipoClase = $idtipoClase;
 
         return $this;
+    }
+
+    /**
+     * Get the value of stockalquiler
+     */
+    public function getStockalquiler(): int
+    {
+        return $this->stockalquiler;
+    }
+
+    /**
+     * Set the value of stockalquiler
+     */
+    public function setStockalquiler(int $stockalquiler)
+    {
+        $this->stockalquiler = $stockalquiler;
     }
 }

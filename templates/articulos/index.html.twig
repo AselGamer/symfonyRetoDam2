@@ -80,10 +80,16 @@
                    STOCK
                </th>
                <th>
+                   STOCK ALQUILER
+               </th>
+               <th>
                    FOTO
                </th>
                <th>
                    TIPO
+               </th>
+               <th>
+                   VER MAS
                </th>
                <th>
                    EDITAR
@@ -101,8 +107,10 @@
             <td>{{ articulo.articulonombre }}</td>
             <td>{{ articulo.precio }}</td>
             <td>{{ articulo.stock }}</td>
+            <td>{{ articulo.stockalquiler }}</td>
             <td><img class="fotoArticulo" src="{{images_directory}}{{ articulo.foto }}"></img></td>
             <td>{{ articulo.tipoarticulo }}</td>
+            <td><div id="tdVerMas"><a href="{{ path('app_articulo_show', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start btnControl">Ver mas</button></a></div></td>
             <td><div id="tdEditar"><a href="{{ path('app_articulo_edit', {'id': articulo.idArticulo}) }}"><button class="btn btn-lg btn-primary float-start btnControl">Editar</button></a></div></td>
             <td><div id="tdEliminar"><button class="btn btn-lg btn-primary float-start btnDelete btnControl" type="submit" data-toggle="modal" id-eliminar="{{ articulo.idArticulo }}">Borrar</button></div></td>
         </tr>

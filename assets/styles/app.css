@@ -103,6 +103,12 @@ select.form-control {
     justify-content: center;
 }
 
+#tdVerMas
+{
+    display: flex;
+    justify-content: center;
+}
+
 td
 {
     vertical-align: middle !important;
@@ -249,4 +255,16 @@ td
 .viewData
 {
     font-size: larger;
+}
+
+.tdVertical
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.imgVer
+{
+    width: 300px;
+    height: 300px;
 }
