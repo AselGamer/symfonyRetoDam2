@@ -144,7 +144,7 @@ class ReparacionController extends AbstractController
         
     }
 
-    #[Route('/api/reparacion/', name: 'app_reparacion_api', methods: ['GET'])]
+    #[Route('/api/reparacion', name: 'app_reparacion_api', methods: ['GET'])]
     public function reparacionApi(): JsonResponse
     {
         $usuario = $this->getUser();
