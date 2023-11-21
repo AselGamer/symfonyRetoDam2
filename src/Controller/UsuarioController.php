@@ -218,6 +218,44 @@ class UsuarioController extends AbstractController
         $this->entityManager->flush();
         return new JsonResponse(['data' => 'Foto eliminada'], JsonResponse::HTTP_OK);
     }
+
+    #[Route('/api/usuario/ponerFoto', name: 'app_usuario_poner_foto', methods:['POST'])]
+    public function ponerFoto(Request $request, SluggerInterface $sluggerInterface): JsonResponse
+    {
+        /** @var Usuario $usuario */
+        $usuario = $this->getUser();
+        if ($usuario->getFoto() != null) {
+            try {
+                unlink($this->getParameter('userimages_directory') . '/' . $usuario->getFoto());
+            } catch (\Throwable $th) {
+                
+            }
+        }
+
+        if (pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'png' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'jpeg' && pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION) != 'webp') 
+                {
+                    return new JsonResponse(['data' => 'Formato de imagen no valido'], JsonResponse::HTTP_BAD_REQUEST);
+                } else
+                {
+                    $nombreFoto = $sluggerInterface->slug(pathinfo($_FILES['foto']['name'], PATHINFO_FILENAME));
+                    $nombreFoto = $nombreFoto . '-' . uniqid() . '.' . pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                    try {
+                        /** @var UploadedFile $uploadedFile */
+                        $uploadedFile = $request->files->get('foto');
+
+                        $uploadedFile->move(
+                            $this->getParameter('userimages_directory'),
+                            $nombreFoto
+                        );
+                        $usuario->setFoto($nombreFoto);
+                        
+                    } catch (FileException $e) {
+                        return new JsonResponse(['data' => 'Error al subir la imagen'], JsonResponse::HTTP_BAD_REQUEST);
+                    }
+        $this->entityManager->flush();
+        return new JsonResponse(['data' => 'Foto Subida'], JsonResponse::HTTP_OK);
+    }
+}
     
 
     private function convertToJsonResponse($object):JsonResponse
