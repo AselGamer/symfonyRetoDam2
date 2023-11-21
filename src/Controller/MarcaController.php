@@ -128,8 +128,23 @@ class MarcaController extends AbstractController
     public function deleteMarcas(int $id): Response
     {
         $marca = $this->entityManager->getRepository(Marca::class)->find($id);
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        
 
         if (!$marca) {
+            return $this->redirectToRoute('app_marca', ['offset' => 1]);
+        }
+
+        $qdb->select('count(a.idarticulo)')
+            ->from('App:Articulo', 'a')
+            ->where('a.idmarca = :marca')
+            ->setParameter('marca', $marca->getIdmarca())
+            ->setMaxResults(1);
+        $cantArticulos = $qdb->getQuery()->getSingleScalarResult();
+
+        if ($cantArticulos > 0) {
+            $this->addFlash('error', 'No se puede eliminar la marca porque tiene artículos asociados');
             return $this->redirectToRoute('app_marca', ['offset' => 1]);
         }
 

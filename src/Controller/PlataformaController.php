@@ -139,6 +139,34 @@ class PlataformaController extends AbstractController
     public function deletePlataformas(int $id): Response
     {
         $plataforma = $this->entityManager->getRepository(Plataforma::class)->find($id);
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('count(a.idplataforma)')
+            ->from('App:Plataformaconsola', 'a')
+            ->where('a.idplataforma = :plataforma')
+            ->setParameter('plataforma', $plataforma->getIdplataforma())
+            ->setMaxResults(1);
+        $cantPlatConsola = $qdb->getQuery()->getSingleScalarResult();
+
+        $qdb->select('count(v.idplataforma)')
+            ->from('App:Videojuego', 'v')
+            ->where('v.idplataforma = :plataforma')
+            ->setParameter('plataforma', $plataforma->getIdplataforma())
+            ->setMaxResults(1);
+        $cantVideojuegos = $qdb->getQuery()->getSingleScalarResult();
+
+        if ($cantVideojuegos > 0) {
+            $this->addFlash('error', 'No se puede eliminar la plataforma porque tiene videojuegos asociados');
+            
+        }
+
+        if ($cantPlatConsola > 0) {
+            $this->addFlash('error', 'No se puede eliminar la plataforma porque tiene consolas asociadas');
+        }
+
+        if ($cantPlatConsola > 0 || $cantVideojuegos > 0) {
+            return $this->redirectToRoute('app_plataforma_paginas', ['offset' => 1]);
+        }
 
         if ($plataforma) {
             $this->entityManager->remove($plataforma);

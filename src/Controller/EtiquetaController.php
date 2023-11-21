@@ -146,6 +146,20 @@ class EtiquetaController extends AbstractController
     public function deleteEtiqueta(int $id): Response
     {
         $etiqueta = $this->entityManager->getRepository(Etiqueta::class)->find($id);
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('count(e.idetiqueta)')
+            ->from('App:Etiquetavideojuego', 'e')
+            ->where('e.idetiqueta = :etiqueta')
+            ->setParameter('etiqueta', $etiqueta->getIdetiqueta())
+            ->setMaxResults(1);
+        $cantVideojuegos = $qdb->getQuery()->getSingleScalarResult();
+
+        if ($cantVideojuegos > 0) {
+            $this->addFlash('error', 'No se puede eliminar la plataforma porque tiene videojuegos asociados');
+            return $this->redirectToRoute('app_etiqueta');
+        }
+
 
         if (!$etiqueta) {
             return $this->redirectToRoute('app_etiqueta');

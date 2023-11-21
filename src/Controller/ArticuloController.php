@@ -248,23 +248,29 @@ class ArticuloController extends AbstractController
         return $this->render('articulos/add.html.twig', $parametros);
     }
 
-    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['DELETE'])]
+    #[Route('/articulos/delete/{id}', name: 'app_articulo_delete', methods:['GET'])]
     public function delete(int $id): Response
     {
 
         $articulo = $this->entityManager->getRepository(Articulo::class)->findOneBy(array('idarticulo' => $id));
 
-        $transacciones = $this->entityManager->getRepository(Detalletransaccion::class)->findBy(array('idarticulo' => $id));
+        $qdb = $this->entityManager->createQueryBuilder();
+
+        $qdb->select('count(dt.idarticulo)')
+        ->from('App:Detalletransaccion', 'dt')
+        ->where('dt.idarticulo = :id')
+        ->setParameter('id', $articulo->getIdarticulo());
+
+        $detalles = $qdb->getQuery()->getSingleScalarResult();
+
+        if ($detalles > 0) {
+            $this->addFlash('error', 'No se puede eliminar el articulo porque tiene transacciones asociadas');
+            return $this->redirectToRoute('app_articulo', ['offset' => 1]);
+        }
 
         $imagenArticulo = $articulo->getFoto();
 
-        if (sizeof($transacciones) > 0) {
-            $this->addFlash(
-                'error',
-                'No se puede eliminar el articulo porque tiene transacciones asociadas'
-             );
-            return $this->redirectToRoute('app_articulo', array('offset' => 1));
-        }
+        
 
         $vistaTipo = $this->entityManager->getRepository(VistaEntity::class)->findOneBy(array('idarticulo' => $id));
 
