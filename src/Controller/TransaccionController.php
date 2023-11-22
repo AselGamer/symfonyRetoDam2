@@ -149,7 +149,7 @@ class TransaccionController extends AbstractController
                     'longitud' => $transaccion->getLongitud(),
                     'fecha_inicio' => $alquiler->getFechaInicio()->format('Y-m-d'),
                     'fecha_fin' => $alquiler->getFechaFin()->format('Y-m-d'),
-                    'fecha_devolucion' => $alquiler->getFechaDevolucion()->format('Y-m-d'),
+                    'fecha_devolucion' => $alquiler->getFechaDevolucion() != null ? $alquiler->getFechaDevolucion()->format('Y-m-d') : null,
                     'precio' => $alquiler->getPrecio(),
                     'detalles' => [],
                 ]);
