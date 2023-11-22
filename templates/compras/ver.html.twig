@@ -39,7 +39,11 @@
                 </div>
                 <div class="col-12">
                     <label class="viewLabel">Fecha Devolucion</label>
-                    <p class="viewData">{{ tipoTrans.fechaInicio|date('Y-m-d') }}</p>
+                    {% if tipoTrans.fechaDevolucion != null %}
+                        <p class="viewData">{{ tipoTrans.fechaDevolucion|date('Y-m-d') }}</p>
+                    {% else %}
+                        <p class="viewData">No se ha devuelto</p>
+                    {% endif %}
                 </div>
             {% endif %}
             <div class="col-12">

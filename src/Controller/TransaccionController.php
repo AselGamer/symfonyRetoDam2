@@ -213,7 +213,7 @@ class TransaccionController extends AbstractController
 
             array_push($datos['detalles'], [
                 'iddetalletransaccion' => $detalle->getIddetalletransaccion(),
-                'idproducto' => $detalle->getIdarticulo(),
+                'idarticulo' => $detalle->getIdarticulo(),
                 'precio_total' => $detalle->getPrecioTotal(),
             ]);
             $loops += 1;
@@ -246,11 +246,13 @@ class TransaccionController extends AbstractController
             $this->entityManager->persist($compra);
         } else if ($datos["tipo_transaccion"] == 'Alquiler')
         {
+            $fechaAlquiler = new DateTime();
+            $fechaFin = new DateTime();
+            $fechaFin->modify('+7 days');
             $alquiler = new Alquiler();
-            $alquiler->setFechaInicio(DateTime::createFromFormat('Y-m-d', $datos['fecha_inicio']));
-            $alquiler->setFechaFin(DateTime::createFromFormat('Y-m-d', $datos['fecha_fin']));
-            $alquiler->setFechaDevolucion(DateTime::createFromFormat('Y-m-d', $datos['fecha_devolucion']));
-            $alquiler->setPrecio($datos['precio']);
+            $alquiler->setFechaInicio($fechaAlquiler);
+            $alquiler->setFechaFin($fechaFin);
+            $alquiler->setFechaDevolucion(null);
             $alquiler->setIdtransaccion($transaccion);
             $this->entityManager->persist($alquiler);
         } else {
@@ -277,6 +279,8 @@ class TransaccionController extends AbstractController
             }
             $detalleTransaccion->setIdarticulo($articulo);
             $detalleTransaccion->setPrecioTotal($articulo->getPrecio());
+            $precioAlquiler = $articulo->getPrecio() / 2;
+            $alquiler->setPrecio($precioAlquiler);
             $this->entityManager->persist($detalleTransaccion);
         }
 

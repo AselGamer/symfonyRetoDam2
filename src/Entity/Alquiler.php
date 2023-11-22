@@ -37,7 +37,7 @@ class Alquiler
     private $fechaFin;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      *
      * @ORM\Column(name="fecha_devolucion", type="date", precision=10, scale=0, nullable=true)
      */
@@ -113,7 +113,7 @@ class Alquiler
     /**
      * Get the value of fechaDevolucion
      */
-    public function getFechaDevolucion(): DateTime
+    public function getFechaDevolucion(): ?DateTime
     {
         return $this->fechaDevolucion;
     }
@@ -121,7 +121,7 @@ class Alquiler
     /**
      * Set the value of fechaDevolucion
      */
-    public function setFechaDevolucion(DateTime $fechaDevolucion)
+    public function setFechaDevolucion(?DateTime $fechaDevolucion)
     {
         $this->fechaDevolucion = $fechaDevolucion;
     }
