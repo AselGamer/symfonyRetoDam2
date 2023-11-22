@@ -279,8 +279,10 @@ class TransaccionController extends AbstractController
             }
             $detalleTransaccion->setIdarticulo($articulo);
             $detalleTransaccion->setPrecioTotal($articulo->getPrecio());
-            $precioAlquiler = $articulo->getPrecio() / 2;
-            $alquiler->setPrecio($precioAlquiler);
+            if ($datos['tipo_transaccion'] == 'Alquiler') {
+                $precioAlquiler = $articulo->getPrecio() / 2;
+                $alquiler->setPrecio($precioAlquiler);
+            }
             $this->entityManager->persist($detalleTransaccion);
         }
 
