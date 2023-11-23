@@ -253,7 +253,7 @@ class UsuarioController extends AbstractController
                         return new JsonResponse(['data' => 'Error al subir la imagen'], JsonResponse::HTTP_BAD_REQUEST);
                     }
         $this->entityManager->flush();
-        return new JsonResponse(['data' => 'Foto Subida'], JsonResponse::HTTP_OK);
+        return new JsonResponse(['data' => 'Foto Subida', 'nombre' => $nombreFoto], JsonResponse::HTTP_OK);
     }
 }
     
